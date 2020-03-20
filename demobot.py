@@ -40,6 +40,11 @@ async def add(ctx:Context):
     else:
         await ctx.send('already in queue')
 
+@bot.command(name='source', help='- link to my sourcecode')
+async def source(ctx):
+    await ctx.send('https://github.com/IdrisTheDragon/demoHelperBot')
+
+
 @bot.command(name='next', help='- sees who\'s next in the queue')
 @commands.has_any_role('Demonstrator','demonstrator','Admin role')
 async def next(ctx):
