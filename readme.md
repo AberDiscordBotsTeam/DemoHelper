@@ -9,3 +9,6 @@ in discord devlopers site, create new app, swap to bot tab, add bot, here you wi
 create a .env file with `DISCORD_TOKEN=<yourtoken-here>`
 
 run the script
+
+![help](https://raw.githubusercontent.com/IdrisTheDragon/demoHelperBot/master/help.png)
+
