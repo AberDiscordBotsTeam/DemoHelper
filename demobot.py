@@ -1,9 +1,13 @@
 import os
 
+import logging
+
 from discord.ext.commands import Context
 from dotenv import load_dotenv
 
 from discord.ext import commands
+
+logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -32,7 +36,7 @@ async def on_command_error(ctx, error):
         await ctx.send('You do not have the correct role for this command.')
     else:
         ctx.send('something went wrong, please contact the Admin')
-        print(error)
+        logging.error(error)
 
 
 @bot.command(name='add', help='- adds the student to the help queue')
@@ -41,7 +45,7 @@ async def add(ctx:Context):
     q = getQueue(ctx.guild)
     if s not in q:
         q.append(s)
-        print(ctx.guild,'add',s)
+        logging.info('{0} add {1]'.format(ctx.guild,s))
         await ctx.send('added you to the queue,\n please join the #wait-for-help voice channel.')
     else:
         await ctx.send('already in queue')
@@ -57,7 +61,7 @@ async def source(ctx):
 async def next(ctx):
     if len(getQueue(ctx.guild)) > 0:
         next = getQueue(ctx.guild).pop(0)
-        print(ctx.guild,'next',next)
+        logging.info('{0} next {1}'.format(ctx.guild,next))
         if next is not None:
             await ctx.send('Next in queue is {0}, {1} will do your signoff/help.'.format(next,ctx.message.author.mention))
     else:
@@ -67,7 +71,7 @@ async def next(ctx):
 @bot.command(name='print', help='- print out the queue')
 @commands.has_any_role('Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole')
 async def printQ(ctx):
-    print(ctx.guild,getQueue(ctx.guild))
+    logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
     await ctx.send('Remaining in queue are {0}'.format(getQueue(ctx.guild)))
 
 
