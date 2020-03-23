@@ -25,10 +25,15 @@ def getQueue(serverName:str):
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
 
+
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CheckFailure):
         await ctx.send('You do not have the correct role for this command.')
+    else:
+        ctx.send('something went wrong, please contact the Admin')
+        print(error)
+
 
 @bot.command(name='add', help='- adds the student to the help queue')
 async def add(ctx:Context):
@@ -36,9 +41,11 @@ async def add(ctx:Context):
     q = getQueue(ctx.guild)
     if s not in q:
         q.append(s)
-        await ctx.send('added you to the queue')
+        print(ctx.guild,'add',s)
+        await ctx.send('added you to the queue,\n please join the #wait-for-help voice channel.')
     else:
         await ctx.send('already in queue')
+
 
 @bot.command(name='source', help='- link to my sourcecode')
 async def source(ctx):
@@ -48,15 +55,19 @@ async def source(ctx):
 @bot.command(name='next', help='- sees who\'s next in the queue')
 @commands.has_any_role('Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole')
 async def next(ctx):
-    next = getQueue(ctx.guild).pop(0)
-    if next is not None:
-        await ctx.send('Next in queue is {0}'.format(next))
+    if len(getQueue(ctx.guild)) > 0:
+        next = getQueue(ctx.guild).pop(0)
+        print(ctx.guild,'next',next)
+        if next is not None:
+            await ctx.send('Next in queue is {0}, {1} will do your signoff/help.'.format(next,ctx.message.author.mention))
     else:
         await ctx.send('No more in queue :)')
+
 
 @bot.command(name='print', help='- print out the queue')
 @commands.has_any_role('Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole')
 async def printQ(ctx):
+    print(ctx.guild,getQueue(ctx.guild))
     await ctx.send('Remaining in queue are {0}'.format(getQueue(ctx.guild)))
 
 
