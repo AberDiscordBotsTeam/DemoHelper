@@ -46,16 +46,16 @@ async def source(ctx):
 
 
 @bot.command(name='next', help='- sees who\'s next in the queue')
-@commands.has_any_role('Demonstrator','demonstrator','Admin role')
+@commands.has_any_role('Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole')
 async def next(ctx):
     next = getQueue(ctx.guild).pop(0)
     if next is not None:
         await ctx.send('Next in queue is {0}'.format(next))
     else:
-        await ctx.send('NO more in queue :)')
+        await ctx.send('No more in queue :)')
 
-@bot.command(name='print', help='- sees who\'s next in the queue')
-@commands.has_any_role('Demonstrator','demonstrator','Admin role')
+@bot.command(name='print', help='- print out the queue')
+@commands.has_any_role('Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole')
 async def printQ(ctx):
     await ctx.send('Remaining in queue are {0}'.format(getQueue(ctx.guild)))
 
