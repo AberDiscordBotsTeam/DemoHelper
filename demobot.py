@@ -19,12 +19,14 @@ queues = {'dummy':[]}
 
 adminRoles = ['Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole']
 
+
 def getQueue(serverName:str):
     if serverName in queues.keys():
         return queues.get(serverName)
     else:
         queues[serverName] = []
         return queues.get(serverName)
+
 
 def getCustomAddMessage(serverName:str):
     with shelve.open('addMessage.shelve') as db:
@@ -49,6 +51,7 @@ async def on_command_error(ctx, error):
         await ctx.send('something went wrong, please contact the Admin')
         logging.error(error)
 
+
 @bot.command(name='setAddMessage', help='- change the message displayed when a person is added to the queue')
 @commands.has_any_role(*adminRoles)
 async def setAddMessage(ctx,*,message:str):
@@ -56,6 +59,7 @@ async def setAddMessage(ctx,*,message:str):
     with shelve.open('addMessage.shelve') as db:
         db[str(ctx.guild)] = message
     await ctx.send('Anyone added to queue will see this msg:\n' + message)
+
 
 @bot.command(name='add', help='- adds the student to the help queue')
 async def add(ctx:Context):
@@ -67,6 +71,7 @@ async def add(ctx:Context):
         await ctx.send('added you to the queue,\n' + getCustomAddMessage(ctx.guild))
     else:
         await ctx.send('already in queue')
+
 
 @bot.command(name='source', help='- link to my sourcecode')
 async def source(ctx):
@@ -90,6 +95,5 @@ async def next(ctx):
 async def printQ(ctx):
     logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
     await ctx.send('Remaining in queue are {0}'.format(getQueue(ctx.guild)))
-
 
 bot.run(TOKEN)
