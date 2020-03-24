@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-bot = commands.Bot(command_prefix='!demoBot ')
+bot = commands.Bot(command_prefix='!')
 
 queues = {'dummy':[]}
 
