@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="742cdffe-dd45-447c-981b-493e4cc18a0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/demobot.py" beforeDir="false" afterPath="$PROJECT_DIR$/demobot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +68,14 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
+    <state x="663" y="326" width="584" height="386" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585049016593">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="663" y="326" width="584" height="386" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585049016593" />
+    <state x="693" y="270" width="524" height="498" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1585049027112">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="693" y="270" width="524" height="498" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585049027112" />
     <state width="1899" height="312" key="GridCell.Tab.0.bottom" timestamp="1585003136026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
