@@ -72,7 +72,18 @@ async def add(ctx:Context):
     else:
         await ctx.send('already in queue')
 
+@bot.command(name='remove', help='- remove self from the help queue')
+async def add(ctx:Context):
+    s = ctx.message.author.mention
+    q = getQueue(ctx.guild)
+    if s in q:
+        q.remove(s)
+        logging.info('{0} remove {1}'.format(ctx.guild, s))
+        await ctx.send('removed you from queue')
+    else:
+        await ctx.send('you were not in the queue')
 
+        
 @bot.command(name='source', help='- link to my sourcecode')
 async def source(ctx):
     await ctx.send('https://github.com/IdrisTheDragon/demoHelperBot')
