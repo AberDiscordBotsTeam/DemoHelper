@@ -88,7 +88,7 @@ class Demonstrators(commands.Cog):
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
         if queue is None or len(queue) == 0:
-            await ctx.send('No students in the Queue!')
+            await ctx.send('No students in the Queue.')
         else:
             await ctx.send('Remaining students in the queue are {0}.'.format(listPrint(queue)))
 

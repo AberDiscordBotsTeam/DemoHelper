@@ -26,14 +26,22 @@ class General(commands.Cog):
         """
         await ctx.send('https://github.com/IdrisTheDragon/demoHelperBot')
 
+    @commands.command()
+    async def info(self,ctx:Context):
+        """
+        Display some info about the bot
+        """
+        await ctx.send('DemoHelper is a queue system for online practicals.\n Students can add themselves to the '
+                       'queue.\n When a demonstrator is free to help, they can call the next command to get the next '
+                       'waiting student. ')
+
 
 # Initialise the Bot object with an accesible help Command object
 helpCommand = DefaultHelpCommand()
 bot = commands.Bot(
     command_prefix='!',
     help_command=helpCommand,
-    description='DemoHelper is a queue system for online practicals.\n Students can add themselves to the queue.\n '
-                'When a demonstrator is free to help, they can call the next command to get the next waiting student. '
+    description=''# todo maybe add a short description for above the help message
 )
 
 # Setup the General cog with the help command
@@ -64,9 +72,9 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send('You are missing a required argument.')
     elif isinstance(error, commands.errors.CommandNotFound):
-        await ctx.send('Pardon, I didn\'t quite get that.')
+        await ctx.send('Sorry, I didn\'t get that.')
     else:
-        await ctx.send('Something went wrong, please contact the Admin.')
+        await ctx.send('Something went wrong, please contact an Admin.')
         logging.error(error)
 
 # Start the bot
