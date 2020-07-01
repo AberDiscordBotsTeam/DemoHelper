@@ -48,11 +48,11 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.errors.MissingRequiredArgument):
         await ctx.send('You are missing a required argument.')
     else:
-        await ctx.send('something went wrong, please contact the Admin')
+        await ctx.send('Something went wrong, please contact the Admin.')
         logging.error(error)
 
 
-@bot.command(name='setAddMessage', help='- change the message displayed when a person is added to the queue')
+@bot.command(name='setAddMessage', help='Change the default add message.')
 @commands.has_any_role(*adminRoles)
 async def setAddMessage(ctx,*,message:str):
     logging.info('{0} setAddMessage {1}'.format(ctx.guild, message))
@@ -61,50 +61,50 @@ async def setAddMessage(ctx,*,message:str):
     await ctx.send('Anyone added to queue will see this msg:\n' + message)
 
 
-@bot.command(name='add', help='- adds the student to the help queue')
+@bot.command(name='add', help='Adds the student to the help queue.')
 async def add(ctx:Context):
     s =ctx.message.author.mention
     q = getQueue(ctx.guild)
     if s not in q:
         q.append(s)
         logging.info('{0} add {1}'.format(ctx.guild,s))
-        await ctx.send('added you to the queue,\n' + getCustomAddMessage(ctx.guild))
+        await ctx.send(s + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
     else:
-        await ctx.send('already in queue')
+        await ctx.send(s + ' is already in the queue.')
 
-@bot.command(name='remove', help='- remove self from the help queue')
+@bot.command(name='remove', help='Removes the student from the help queue.')
 async def add(ctx:Context):
     s = ctx.message.author.mention
     q = getQueue(ctx.guild)
     if s in q:
         q.remove(s)
         logging.info('{0} remove {1}'.format(ctx.guild, s))
-        await ctx.send('removed you from queue')
+        await ctx.send(s + ' has been removed from queue.')
     else:
-        await ctx.send('you were not in the queue')
+        await ctx.send(s + ' is not in the queue.')
 
         
-@bot.command(name='source', help='- link to my sourcecode')
+@bot.command(name='source', help='Link to creators sourcecode.')
 async def source(ctx):
     await ctx.send('https://github.com/IdrisTheDragon/demoHelperBot')
 
 
-@bot.command(name='next', help='- sees who\'s next in the queue')
+@bot.command(name='next', help='Get the next student in the queue.')
 @commands.has_any_role(*adminRoles)
 async def next(ctx):
     if len(getQueue(ctx.guild)) > 0:
         next = getQueue(ctx.guild).pop(0)
         logging.info('{0} next {1}'.format(ctx.guild,next))
         if next is not None:
-            await ctx.send('Next in queue is {0}, {1} will do your signoff/help.'.format(next,ctx.message.author.mention))
+            await ctx.send('The next student in the queue is {0}, {1} will be with you shortly to signoff or help you.'.format(next,ctx.message.author.mention))
     else:
-        await ctx.send('No more in queue :)')
+        await ctx.send('No more students in the queue.')
 
 
-@bot.command(name='print', help='- print out the queue')
+@bot.command(name='print', help='Print out the students in the queue.')
 @commands.has_any_role(*adminRoles)
 async def printQ(ctx):
     logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
-    await ctx.send('Remaining in queue are {0}'.format(getQueue(ctx.guild)))
+    await ctx.send('Remaining students in the queue are {0}'.format(getQueue(ctx.guild)))
 
 bot.run(TOKEN)
