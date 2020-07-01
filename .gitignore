@@ -1,3 +1,5 @@
 .env
 *.shelve
 .idea/
+
+__pycache__/
