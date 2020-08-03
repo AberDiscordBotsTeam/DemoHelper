@@ -1,5 +1,5 @@
 .env
 *.shelve
 .idea/
-
 __pycache__/
+Pipfile.lock
