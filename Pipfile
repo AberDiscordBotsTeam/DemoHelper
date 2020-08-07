@@ -8,6 +8,7 @@ verify_ssl = true
 [packages]
 discord = "*"
 python-dotenv = "*"
+PyNaCl = "*"
 "discord.py" = "*"
 
 [requires]

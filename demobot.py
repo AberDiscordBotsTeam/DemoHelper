@@ -6,8 +6,23 @@ from discord.ext import commands
 from discord.ext.commands import Context, DefaultHelpCommand
 from dotenv import load_dotenv
 
-# set logging level todo get this from .env file
-logging.basicConfig(level=logging.INFO)
+# logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
+logger = logging.getLogger('discord')
+logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+
+
+# Initialise the Bot object with an accessible help Command object
+helpCommand = DefaultHelpCommand()
+
+bot = commands.Bot(
+    command_prefix='!',  # changing this prefix changes the way the bot is called. e.g. '$' = $add or '!' = !add
+    help_command=helpCommand,
+    description='Help command'
+)
+
 
 # load the private discord token from .env file.
 load_dotenv()
@@ -22,33 +37,34 @@ class General(commands.Cog):
     @commands.command()
     async def source(self, ctx: Context):
         """
-        Link to the sourcecode.
+        Link to the sourcecode
         """
-        await ctx.send('https://github.com/IdrisTheDragon/demoHelperBot')
+        await ctx.send(content='Created by `Nathan Williams`\nMaintained by `Joel Adams`\n'
+                               'https://github.com/AberDiscordBotsTeam/demoHelperBot')
 
     @commands.command()
-    async def info(self,ctx:Context):
+    async def info(self, ctx: Context):
         """
-        Display some info about the bot
+        Display some info about how the bot works
         """
-        await ctx.send('DemoHelper is a queue system for online practicals.\n Students can add themselves to the '
-                       'queue.\n When a demonstrator is free to help, they can call the next command to get the next '
-                       'waiting student. ')
+        await ctx.send('DemoHelper is a queue system for online practical where students can add themselves to the '
+                       'queue using `!add`. When a demonstrator is free to help, they can call the `!next` command to '
+                       'get the next waiting student.')
 
+    @commands.command()
+    async def feedback(self, ctx: Context):
+        """
+        Report feedback or issues with the bot
+        """
+        await ctx.send('If the bot is broken or you have any feedback you\'d like to submit please join '
+                       'https://discord.gg/b3EdxVK and post a message in the <#740966780079571105> or '
+                       '<#740967688876327012> channels')
 
-# Initialise the Bot object with an accesible help Command object
-helpCommand = DefaultHelpCommand()
-bot = commands.Bot(
-    command_prefix='!',
-    help_command=helpCommand,
-    description=''# todo maybe add a short description for above the help message
-)
 
 # Setup the General cog with the help command
 generalCog = General()
 bot.add_cog(generalCog)
 helpCommand.cog = generalCog
-
 
 # load other cogs
 bot.load_extension("cogs.demoHelper")
@@ -76,6 +92,7 @@ async def on_command_error(ctx, error):
     else:
         await ctx.send('Something went wrong, please contact an Admin.')
         logging.error(error)
+
 
 # Start the bot
 bot.run(TOKEN)
