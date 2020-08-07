@@ -4,7 +4,6 @@ stores a queue of people waiting for demonstrators to help them with their work 
 
 **Please note:**  The user requires one of the following roles with the same name to have full access to all 
 the bots commands: Demonstrator, demonstrator, DEMONSTRATOR, Admin role, ADMIN ROLE, Admin, Devs
-=======
 
 ## Install and use locally
 1. Check python3, pip and pipenv are installed
