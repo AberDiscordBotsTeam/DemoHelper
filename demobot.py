@@ -15,6 +15,11 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 
+# load the private discord token from .env file.
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
+
 # Initialise the Bot object with an accessible help Command object
 helpCommand = DefaultHelpCommand()
 
@@ -23,12 +28,6 @@ bot = commands.Bot(
     help_command=helpCommand,
     description='Help command'
 )
-
-
-# load the private discord token from .env file.
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-
 
 # Setup the General cog with the help command
 generalCog = General()
