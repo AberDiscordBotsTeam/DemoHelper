@@ -7,7 +7,8 @@ import shelve
 from helpers import listPrint
 
 queues = {'dummy': []}
-adminRoles = ['Demonstrator','demonstrator','Admin role','ADMIN ROLE','DEMONSTRATOR','admin role','adminrole']
+# Possible roles available for the user to add allowing them to use all the bot commands
+adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs']
 
 
 def setup(bot):
@@ -90,7 +91,7 @@ class Demonstrators(commands.Cog):
         if queue is None or len(queue) == 0:
             await ctx.send('No students in the Queue.')
         else:
-            await ctx.send('Remaining students in the queue are {0}.'.format(listPrint(queue)))
+            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
 
 
 class Students(commands.Cog):
