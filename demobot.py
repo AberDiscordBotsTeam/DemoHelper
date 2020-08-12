@@ -45,22 +45,5 @@ async def on_ready():
     """
     print(f'{bot.user.name} has connected to Discord!')
 
-
-@bot.event
-async def on_command_error(ctx, error):
-    """
-    Handle the Error message in a nice way.
-    """
-    if isinstance(error, commands.errors.CheckFailure):
-        await ctx.send('You do not have the correct role for this command.')
-    elif isinstance(error, commands.errors.MissingRequiredArgument):
-        await ctx.send('You are missing a required argument.')
-    elif isinstance(error, commands.errors.CommandNotFound):
-        await ctx.send('Sorry, I didn\'t get that.')
-    else:
-        await ctx.send('Something went wrong, please contact an Admin.')
-        logging.error(error)
-
-
 # Start the bot
 bot.run(TOKEN)
