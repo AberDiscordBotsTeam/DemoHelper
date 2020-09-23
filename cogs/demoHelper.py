@@ -8,7 +8,8 @@ from helpers import listPrint
 
 queues = {'dummy': []}
 # Possible roles available for the user to add allowing them to use all the bot commands
-adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs']
+adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
+              'LECTURER']
 
 
 def setup(bot):
@@ -42,7 +43,7 @@ def getCustomAddMessage(serverName: str):
         if str(serverName) in db:
             return db.get(str(serverName))
         else:
-            return ''
+            return 'Please join the `Wait for help` voice channel and wait to moved to another voice channel'
 
 
 class Demonstrators(commands.Cog):
