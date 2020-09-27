@@ -43,7 +43,7 @@ def getCustomAddMessage(serverName: str):
         if str(serverName) in db:
             return db.get(str(serverName))
         else:
-            return 'Please join the `Wait for help` voice channel and wait to moved to another voice channel'
+            return 'Please join the `Wait for help` voice channel and wait to be moved to another voice channel'
 
 
 class Demonstrators(commands.Cog):
