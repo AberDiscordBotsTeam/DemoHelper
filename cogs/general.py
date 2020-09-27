@@ -10,7 +10,7 @@ class General(commands.Cog):
     @commands.command()
     async def source(self, ctx: Context):
         """
-        Link to the sourcecode
+        Print a link to the DemoHelper source code
         """
         await ctx.send(content='Created by `Nathan Williams`\nMaintained by `Joel Adams`\n'
                                'https://github.com/AberDiscordBotsTeam/demoHelperBot')
