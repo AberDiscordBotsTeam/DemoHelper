@@ -9,7 +9,7 @@ from helpers import listPrint
 queues = {'dummy': []}
 # Possible roles available for the user to add allowing them to use all the bot commands
 adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
-              'LECTURER']
+              'LECTURER','advisor']
 
 
 def setup(bot):
