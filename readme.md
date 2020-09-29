@@ -5,6 +5,8 @@ stores a queue of people waiting for demonstrators to help them with their work 
 **Please note:**  The user requires one of the following roles with the same name to have full access to all 
 the bots commands: Demonstrator, demonstrator, DEMONSTRATOR, Admin role, ADMIN ROLE, Admin, Devs
 
+**Aber Verify Bot integration** Once you've added the `Aber Verify Bot` and configured the server channels you will need to manually assign `DemoHelper` the role of verified from the `#verify-newcomers` channel to allow it to see any other channels 
+
 ## Install and use locally
 1. Check python3, pip and pipenv are installed
 2. Navigate to a terminal and `git clone  <repository url>` and cd into its directory
@@ -51,4 +53,3 @@ WantedBy=multi-user.target
 
 ## Preview of bot working
 ![help](https://raw.githubusercontent.com/IdrisTheDragon/demoHelperBot/master/help_2.png)
-
