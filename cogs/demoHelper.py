@@ -1,3 +1,5 @@
+import asyncio
+
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -9,7 +11,7 @@ from helpers import listPrint
 queues = {'dummy': []}
 # Possible roles available for the user to add allowing them to use all the bot commands
 adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
-              'LECTURER','advisor']
+              'LECTURER', 'advisor']
 
 
 def setup(bot):
@@ -50,6 +52,7 @@ class Demonstrators(commands.Cog):
     """
     Commands for demonstrators and Admins.
     """
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -93,6 +96,18 @@ class Demonstrators(commands.Cog):
             await ctx.send('No students in the Queue.')
         else:
             await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
+
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
+    async def clear(self, ctx: Context):
+        """
+        Clear all messages from the channel
+        """
+        messages = await ctx.channel.history().flatten()
+        await ctx.channel.delete_messages(messages)
+        await ctx.channel.send('All previous messages deleted, this message will delete in 5 seconds')
+        await asyncio.sleep(5)
+        await ctx.channel.purge(limit=1)
 
 
 class Students(commands.Cog):
