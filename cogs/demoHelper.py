@@ -1,5 +1,7 @@
 import asyncio
 
+import discord
+from discord import Member, VoiceChannel, Guild, ChannelType
 from discord import Permissions
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -104,7 +106,7 @@ class Demonstrators(commands.Cog):
             if next is not None:
                 prevMessages[k] = await ctx.send(
                     'The next student in the queue is {0}, {1} will be with you shortly to signoff or help you.'.format(
-                        next, ctx.message.author.mention))
+                        next.mention, ctx.message.author.mention))
         else:
             prevMessages[k] = await ctx.send('No more students in the queue.')
         await rmCMDMessage(ctx)
@@ -120,10 +122,54 @@ class Demonstrators(commands.Cog):
 
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
+        temp = []
+        for x in queue:
+            temp.append(x.mention)
+        queue = temp
         if queue is None or len(queue) == 0:
             prevMessages[k] = await ctx.send('No students in the Queue.')
         else:
             prevMessages[k] = await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
+        await rmCMDMessage(ctx)
+
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
+    async def nextV2(self, ctx:Context):
+        """
+        pull the student to a voice channel
+        """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(ctx, k)
+
+        if len(getQueue(ctx.guild)) > 0:
+            next = getQueue(ctx.guild).pop(0)
+            logging.info('{0} next {1}'.format(ctx.guild, next))
+            if next is not None:
+                for m in ctx.guild.members:
+                    if m.id == next.id:
+                        next = m
+                        break
+                if next.voice and next.voice.channel:
+                    prevMessages[k] = await ctx.send(
+                        'The next student in the queue is {0}, They have been moved to your help voice channel.'.format(
+                            next.mention))
+                    voiceChannel = None
+                    print(ctx.channel.name)
+                    for channel in ctx.guild.channels:
+                        print(channel.name, channel.type)
+                        if channel.name == ctx.channel.name and channel.type is ChannelType.voice:
+                            voiceChannel = channel
+                            break
+                    if voiceChannel:
+                        await next.move_to(voiceChannel)
+                else:
+                    prevMessages[k] = await ctx.send(
+                        'The next student in the queue is {0}, {1} can now help you in {2} .'.format(
+                            next.mention, ctx.message.author.mention, ctx.channel.mention))
+
+
+        else:
+            prevMessages[k] = await ctx.send('No more students in the queue.')
         await rmCMDMessage(ctx)
 
 
@@ -143,14 +189,15 @@ class Students(commands.Cog):
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
-        s = ctx.message.author.mention
+        s = ctx.message.author
         q = getQueue(ctx.guild)
         if s not in q:
             q.append(s)
             logging.info('{0} add {1}'.format(ctx.guild, s))
-            prevMessages[k] = await ctx.send(s + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
+            prevMessages[k] = await ctx.send(
+                s.mention + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
         else:
-            prevMessages[k] = await ctx.send(s + ' is already in the queue.')
+            prevMessages[k] = await ctx.send(s.mention + ' is already in the queue.')
         await rmCMDMessage(ctx)
 
     @commands.command()
@@ -161,14 +208,14 @@ class Students(commands.Cog):
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
-        s = ctx.message.author.mention
+        s = ctx.message.author
         q = getQueue(ctx.guild)
         if s in q:
             q.remove(s)
             logging.info('{0} remove {1}'.format(ctx.guild, s))
-            prevMessages[k] = await ctx.send(s + ' has been removed from queue.')
+            prevMessages[k] = await ctx.send(s.mention + ' has been removed from queue.')
         else:
-            prevMessages[k] = await ctx.send(s + ' is not in the queue.')
+            prevMessages[k] = await ctx.send(s.mention + ' is not in the queue.')
         await rmCMDMessage(ctx)
 
 
