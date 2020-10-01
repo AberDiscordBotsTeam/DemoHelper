@@ -1,5 +1,6 @@
 import asyncio
 
+import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -133,9 +134,12 @@ class Demonstrators(commands.Cog):
         """
         Clear all messages from the channel
         """
-        messages = await ctx.channel.history().flatten()
-        await ctx.channel.delete_messages(messages)
-        await ctx.channel.send('All previous messages deleted, this message will delete in 5 seconds')
+        counter = 0
+        async for message in ctx.channel.history(limit=1000):
+                counter += 1
+        await ctx.channel.purge()
+        await ctx.channel.send('Success! Messages deleted: `' + str(counter) + '`, this message will delete in 5 '
+                                                                               'seconds')
         await asyncio.sleep(5)
         await ctx.channel.purge(limit=1)
 
