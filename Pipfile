@@ -10,6 +10,7 @@ discord = "*"
 python-dotenv = "*"
 PyNaCl = "*"
 "discord.py" = "*"
+asyncio = "*"
 
 [requires]
 python_version = "3.7"

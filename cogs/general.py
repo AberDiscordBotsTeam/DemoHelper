@@ -34,7 +34,7 @@ class General(commands.Cog):
                        '<#740967688876327012> channels')
 
     @commands.command()
-    async def ping(selfself, ctx:Context):
+    async def ping(self, ctx: Context):
         """
         status check
         """
