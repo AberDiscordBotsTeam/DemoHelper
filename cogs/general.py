@@ -32,3 +32,10 @@ class General(commands.Cog):
         await ctx.send('If the bot is broken or you have any feedback you\'d like to submit please join '
                        'https://discord.gg/b3EdxVK and post a message in the <#740966780079571105> or '
                        '<#740967688876327012> channels')
+
+    @commands.command()
+    async def ping(selfself, ctx:Context):
+        """
+        status check
+        """
+        await ctx.send('pong')
