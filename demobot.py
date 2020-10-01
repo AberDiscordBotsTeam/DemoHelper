@@ -18,13 +18,20 @@ logger.addHandler(handler)
 # load the private discord token from .env file.
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+PREFIX = os.getenv('CMD_PREFIX')
 
 
 # Initialise the Bot object with an accessible help Command object
 helpCommand = DefaultHelpCommand()
 
+# check if prefix set in the .env otherwise use default.
+# changing the prefix changes the way the bot is called. e.g. '$' = $add or '!' = !add
+prefix = PREFIX
+if not prefix:
+    prefix = '!'
+
 bot = commands.Bot(
-    command_prefix='!',  # changing this prefix changes the way the bot is called. e.g. '$' = $add or '!' = !add
+    command_prefix=prefix,
     help_command=helpCommand,
     description='Help command'
 )
