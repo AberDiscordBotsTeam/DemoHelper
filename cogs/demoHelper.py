@@ -11,9 +11,18 @@ queues = {'dummy': []}
 adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
               'LECTURER','advisor']
 
+# somewhere to store the last message sent per guild per channel.
+# key used is the guild name + the channel name.
+# using ctx.message.delete() to the message that called a particular command.
+# any messages sent that you want cleared next time bot is used
+# save into prevMessages e.g prevMessages[k] = await ctx.send(...)
 prevMessages = {'dummy':None}
 
 async def rmPrevMessage(k):
+    """
+    remove the message associated with the key (k) from the store and delete it if it still exists on the server.
+    called on the commands you want to remove the previous message before putting in new one.
+    """
     if k in prevMessages.keys():
         prevM = prevMessages[k]
         if prevM:
