@@ -12,7 +12,8 @@ the bots commands: Demonstrator, demonstrator, DEMONSTRATOR, Admin role, ADMIN R
 2. Navigate to a terminal and `git clone  <repository url>` and cd into its directory
 3. `pipenv install` to install dependencies
 4. Navigate to the discord developers site, create a new application, go to the bot tab, add a bot and then copy the token from that tab
-5. create a .env file with the token from the previous step using the format `DISCORD_TOKEN=<yourtoken-here>`
+5. create a .env file with the token from the previous step using the format `DISCORD_TOKEN=<yourtoken-here>`.
+Optionally add the line `CMD_PREFIX=<custom-prefix>` to change from the default prefix of `!`
 6. `pipenv run python3 -m demobot` to run the server
 7. Navigate to the 0Auth2 tab and select bot from the scopes section, then scroll down and select the bot permissions: View channels and Send Messages. Copy the link from the scopes section and paste it into your web browser and select the servers you want to add the bot to
   
