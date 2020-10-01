@@ -11,6 +11,18 @@ queues = {'dummy': []}
 adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
               'LECTURER','advisor']
 
+prevMessages = {'dummy':None}
+
+async def rmPrevMessage(k):
+    if k in prevMessages.keys():
+        prevM = prevMessages[k]
+        if prevM:
+            try:
+                await prevM.delete()
+            except:
+                pass  # ignore
+            prevMessages[k] = None
+
 
 def setup(bot):
     """
@@ -71,15 +83,19 @@ class Demonstrators(commands.Cog):
         """
         Get the next student in the queue.
         """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(k)
+
         if len(getQueue(ctx.guild)) > 0:
             next = getQueue(ctx.guild).pop(0)
             logging.info('{0} next {1}'.format(ctx.guild, next))
             if next is not None:
-                await ctx.send(
+                prevMessages[k] = await ctx.send(
                     'The next student in the queue is {0}, {1} will be with you shortly to signoff or help you.'.format(
                         next, ctx.message.author.mention))
         else:
-            await ctx.send('No more students in the queue.')
+            prevMessages[k] = await ctx.send('No more students in the queue.')
+        await ctx.message.delete()
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
@@ -87,12 +103,17 @@ class Demonstrators(commands.Cog):
         """
         Print out the students in the queue.
         """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(k)
+
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
         if queue is None or len(queue) == 0:
-            await ctx.send('No students in the Queue.')
+            prevMessages[k] = await ctx.send('No students in the Queue.')
         else:
-            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
+            prevMessages[k] = await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
+        await ctx.message.delete()
+
 
 
 class Students(commands.Cog):
@@ -108,25 +129,33 @@ class Students(commands.Cog):
         """
         Adds the student to the help queue.
         """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(k)
+
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
         if s not in q:
             q.append(s)
             logging.info('{0} add {1}'.format(ctx.guild, s))
-            await ctx.send(s + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
+            prevMessages[k] = await ctx.send(s + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
         else:
-            await ctx.send(s + ' is already in the queue.')
+            prevMessages[k] = await ctx.send(s + ' is already in the queue.')
+        await ctx.message.delete()
 
     @commands.command()
     async def remove(self, ctx: Context):
         """
         Removes the student from the help queue.
         """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(k)
+
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
         if s in q:
             q.remove(s)
             logging.info('{0} remove {1}'.format(ctx.guild, s))
-            await ctx.send(s + ' has been removed from queue.')
+            prevMessages[k] = await ctx.send(s + ' has been removed from queue.')
         else:
-            await ctx.send(s + ' is not in the queue.')
+            prevMessages[k] = await ctx.send(s + ' is not in the queue.')
+        await ctx.message.delete()
