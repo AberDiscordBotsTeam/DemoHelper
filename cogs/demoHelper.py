@@ -1,6 +1,7 @@
 import asyncio
 
 import discord
+from discord import Permissions
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -21,7 +22,7 @@ adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADM
 # save into prevMessages e.g prevMessages[k] = await ctx.send(...)
 prevMessages = {'dummy':None}
 
-async def rmPrevMessage(k):
+async def rmPrevMessage(ctx:Context,k):
     """
     remove the message associated with the key (k) from the store and delete it if it still exists on the server.
     called on the commands you want to remove the previous message before putting in new one.
@@ -29,11 +30,22 @@ async def rmPrevMessage(k):
     if k in prevMessages.keys():
         prevM = prevMessages[k]
         if prevM:
-            try:
-                await prevM.delete()
-            except:
-                pass  # ignore
+            botPerms: Permissions = ctx.channel.permissions_for(ctx.me)
+            if botPerms.manage_messages: # only do if bot has permission otherwise ignore
+                try:
+                    await prevM.delete()
+                except:
+                    pass  # ignore
             prevMessages[k] = None
+
+
+async def rmCMDMessage(ctx:Context):
+    """
+    delete the command message for the context provided if bot has required perms.
+    """
+    botPerms: Permissions = ctx.channel.permissions_for(ctx.me)
+    if botPerms.manage_messages: # only do if bot has permission otherwise ignore
+        await ctx.message.delete()
 
 
 def setup(bot):
@@ -97,7 +109,7 @@ class Demonstrators(commands.Cog):
         Get the next student in the queue.
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(k)
+        await rmPrevMessage(ctx,k)
 
         if len(getQueue(ctx.guild)) > 0:
             next = getQueue(ctx.guild).pop(0)
@@ -108,7 +120,7 @@ class Demonstrators(commands.Cog):
                         next, ctx.message.author.mention))
         else:
             prevMessages[k] = await ctx.send('No more students in the queue.')
-        await ctx.message.delete()
+        await rmCMDMessage(ctx)
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
@@ -117,7 +129,7 @@ class Demonstrators(commands.Cog):
         Print out the students in the queue.
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(k)
+        await rmPrevMessage(ctx,k)
 
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
@@ -125,11 +137,12 @@ class Demonstrators(commands.Cog):
             prevMessages[k] = await ctx.send('No students in the Queue.')
         else:
             prevMessages[k] = await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
-        await ctx.message.delete()
+        await rmCMDMessage(ctx)
 
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
+    @commands.bot_has_permissions(manage_messages=True)
     async def clear(self, ctx: Context):
         """
         Clear all messages from the channel
@@ -158,7 +171,7 @@ class Students(commands.Cog):
         Adds the student to the help queue.
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(k)
+        await rmPrevMessage(ctx,k)
 
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
@@ -168,7 +181,7 @@ class Students(commands.Cog):
             prevMessages[k] = await ctx.send(s + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
         else:
             prevMessages[k] = await ctx.send(s + ' is already in the queue.')
-        await ctx.message.delete()
+        await rmCMDMessage(ctx)
 
     @commands.command()
     async def remove(self, ctx: Context):
@@ -176,7 +189,7 @@ class Students(commands.Cog):
         Removes the student from the help queue.
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(k)
+        await rmPrevMessage(ctx,k)
 
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
@@ -186,4 +199,4 @@ class Students(commands.Cog):
             prevMessages[k] = await ctx.send(s + ' has been removed from queue.')
         else:
             prevMessages[k] = await ctx.send(s + ' is not in the queue.')
-        await ctx.message.delete()
+        await rmCMDMessage(ctx)
