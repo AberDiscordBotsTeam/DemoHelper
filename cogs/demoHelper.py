@@ -6,7 +6,6 @@ from discord.ext.commands import Context
 
 import logging
 import shelve
-import time
 
 from helpers import listPrint
 
