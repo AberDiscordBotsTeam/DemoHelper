@@ -33,7 +33,6 @@ if not prefix:
 bot = commands.Bot(
     command_prefix=prefix,
     help_command=helpCommand,
-    description=''
 )
 
 # Setup the General cog with the help command
