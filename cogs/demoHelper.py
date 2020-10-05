@@ -1,6 +1,5 @@
 import asyncio
 
-import discord
 from discord import Permissions
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -20,9 +19,10 @@ adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADM
 # using ctx.message.delete() to the message that called a particular command.
 # any messages sent that you want cleared next time bot is used
 # save into prevMessages e.g prevMessages[k] = await ctx.send(...)
-prevMessages = {'dummy':None}
+prevMessages = {'dummy': None}
 
-async def rmPrevMessage(ctx:Context,k):
+
+async def rmPrevMessage(ctx: Context, k):
     """
     remove the message associated with the key (k) from the store and delete it if it still exists on the server.
     called on the commands you want to remove the previous message before putting in new one.
@@ -31,7 +31,7 @@ async def rmPrevMessage(ctx:Context,k):
         prevM = prevMessages[k]
         if prevM:
             botPerms: Permissions = ctx.channel.permissions_for(ctx.me)
-            if botPerms.manage_messages: # only do if bot has permission otherwise ignore
+            if botPerms.manage_messages:  # only do if bot has permission otherwise ignore
                 try:
                     await prevM.delete()
                 except:
@@ -39,12 +39,12 @@ async def rmPrevMessage(ctx:Context,k):
             prevMessages[k] = None
 
 
-async def rmCMDMessage(ctx:Context):
+async def rmCMDMessage(ctx: Context):
     """
     delete the command message for the context provided if bot has required perms.
     """
     botPerms: Permissions = ctx.channel.permissions_for(ctx.me)
-    if botPerms.manage_messages: # only do if bot has permission otherwise ignore
+    if botPerms.manage_messages:  # only do if bot has permission otherwise ignore
         await ctx.message.delete()
 
 
@@ -54,6 +54,7 @@ def setup(bot):
     """
     bot.add_cog(Students(bot))
     bot.add_cog(Demonstrators(bot))
+    bot.add_cog(Utilities(bot))
 
 
 def getQueue(serverName: str):
@@ -84,7 +85,7 @@ def getCustomAddMessage(serverName: str):
 
 class Demonstrators(commands.Cog):
     """
-    Commands for demonstrators and Admins.
+    Commands for demonstrators and Admins
     """
 
     def __init__(self, bot):
@@ -92,24 +93,12 @@ class Demonstrators(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
-    async def setAddMessage(self, ctx: Context, *, message: str):
-        """
-        Change the default add message.
-        :param message: The new add message to set.
-        """
-        logging.info('{0} setAddMessage {1}'.format(ctx.guild, message))
-        with shelve.open('addMessage.shelve') as db:
-            db[str(ctx.guild)] = message
-        await ctx.send('Anyone added to queue will see this msg:\n' + message)
-
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
     async def next(self, ctx: Context):
         """
-        Get the next student in the queue.
+        Get the next student in the queue
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx,k)
+        await rmPrevMessage(ctx, k)
 
         if len(getQueue(ctx.guild)) > 0:
             next = getQueue(ctx.guild).pop(0)
@@ -126,10 +115,10 @@ class Demonstrators(commands.Cog):
     @commands.has_any_role(*adminRoles)
     async def print(self, ctx: Context):
         """
-        Print out the students in the queue.
+        Print out the students in the queue
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx,k)
+        await rmPrevMessage(ctx, k)
 
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
@@ -138,23 +127,6 @@ class Demonstrators(commands.Cog):
         else:
             prevMessages[k] = await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
         await rmCMDMessage(ctx)
-
-
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
-    @commands.bot_has_permissions(manage_messages=True)
-    async def clear(self, ctx: Context):
-        """
-        Clears all messages that are less than 14 days old
-        """
-        counter = 0
-        async for message in ctx.channel.history(limit=1000):
-                counter += 1
-        await ctx.channel.purge()
-        await ctx.channel.send('Success! Messages deleted: `' + str(counter) + '`, this message will delete in 5 '
-                                                                               'seconds')
-        await asyncio.sleep(5)
-        await ctx.channel.purge(limit=1)
 
 
 class Students(commands.Cog):
@@ -168,10 +140,10 @@ class Students(commands.Cog):
     @commands.command()
     async def add(self, ctx: Context):
         """
-        Adds the student to the help queue.
+        Adds the student to the help queue
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx,k)
+        await rmPrevMessage(ctx, k)
 
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
@@ -186,10 +158,10 @@ class Students(commands.Cog):
     @commands.command()
     async def remove(self, ctx: Context):
         """
-        Removes the student from the help queue.
+        Removes the student from the help queue
         """
         k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx,k)
+        await rmPrevMessage(ctx, k)
 
         s = ctx.message.author.mention
         q = getQueue(ctx.guild)
@@ -200,3 +172,44 @@ class Students(commands.Cog):
         else:
             prevMessages[k] = await ctx.send(s + ' is not in the queue.')
         await rmCMDMessage(ctx)
+
+
+class Utilities(commands.Cog):
+    """
+    General Utilities
+    """
+
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
+    @commands.bot_has_permissions(manage_messages=True)
+    async def clear(self, ctx: Context):
+        """
+        Clears all messages in a channel that are less than 14 days old
+        """
+        counter = 0
+        async for message in ctx.channel.history(limit=1000):
+            counter += 1
+        await ctx.channel.purge()
+        await ctx.channel.send('Success! Messages deleted: `' + str(counter) + '`, this message will delete in 5 '
+                                                                               'seconds')
+        await asyncio.sleep(5)
+        await ctx.channel.purge(limit=1)
+
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
+    async def setAddMessage(self, ctx: Context, *, message: str):
+        """
+        Change the default add message
+        :param message: The new add message to set.
+        """
+        logging.info('{0} setAddMessage {1}'.format(ctx.guild, message))
+        with shelve.open('addMessage.shelve') as db:
+            db[str(ctx.guild)] = message
+        await ctx.send('Anyone added to queue will see this msg:\n' + message)
+
+    @commands.command()
+    async def ping(self, ctx: Context):
+        """
+        Status check
+        """
+        await ctx.send('pong')
