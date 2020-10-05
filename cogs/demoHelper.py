@@ -145,7 +145,7 @@ class Demonstrators(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def clear(self, ctx: Context):
         """
-        Clear all messages from the channel
+        Clears all messages that are less than 14 days old
         """
         counter = 0
         async for message in ctx.channel.history(limit=1000):
