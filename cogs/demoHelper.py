@@ -212,4 +212,9 @@ class Utilities(commands.Cog):
         """
         Status check
         """
-        await ctx.send('pong')
+        import time
+        start_time = time.time()
+        message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms`')
+        end_time = time.time()
+        await message.edit(content='pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms` '
+                            '`Response time: ' + str(round(end_time-start_time, 3)) + 'ms`')

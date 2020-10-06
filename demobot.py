@@ -2,6 +2,7 @@ import os
 
 import logging
 
+import discord
 from discord.ext import commands
 from discord.ext.commands import Context, DefaultHelpCommand
 from dotenv import load_dotenv
@@ -50,6 +51,8 @@ async def on_ready():
     Do something when the bot is ready to use.
     """
     print(f'{bot.user.name} has connected to Discord!')
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, 
+                                                        name=f'{str(len(bot.guilds))} servers'))
 
 
 @bot.event
