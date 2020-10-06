@@ -49,6 +49,18 @@ class Utilities(commands.Cog):
         await ctx.send('Anyone added to queue will see this msg:\n' + message)
 
     @commands.command()
+    @commands.has_any_role(*adminRoles)
+    async def resetAddMessage(self, ctx: Context):
+        """
+        Resets the custom add message
+        """
+        serverName = ctx.guild
+        with shelve.open(addMessageFile) as db:
+            if str(serverName) in db:
+                db.pop(str(serverName))
+                return await ctx.send('Custom add message has been reset')
+
+    @commands.command()
     async def ping(self, ctx: Context):
         """
         Status check
