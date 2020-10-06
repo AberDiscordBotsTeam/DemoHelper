@@ -14,7 +14,6 @@ from helpers import listPrint
 
 queues = {'dummy': []}
 
-
 # somewhere to store the last message sent per guild per channel.
 # key used is the guild name + the channel name.
 # using ctx.message.delete() to the message that called a particular command.
@@ -85,7 +84,7 @@ def getCustomAddMessage(serverName: str):
             return 'Please join the `Wait for help` voice channel and wait to be moved to another voice channel'
 
 
-def updateMember(ctx:Context, m:Member):
+def updateMember(ctx: Context, m: Member):
     """
     If you have a member object from a previous command that needs updating. This fucntion si for you.
 
@@ -99,7 +98,7 @@ def updateMember(ctx:Context, m:Member):
     return m
 
 
-async def pullToVoice(ctx:Context, user: Member):
+async def pullToVoice(ctx: Context, user: Member):
     """
     Attempts to pull a user to a voice channel with the same name as the current text channel.
 
@@ -107,11 +106,6 @@ async def pullToVoice(ctx:Context, user: Member):
     :param user: the user to move
     :returns: true or false based on whether the move was a success.
     """
-
-    #check we have correct perms
-    botPerms: Permissions = ctx.channel.permissions_for(ctx.me)
-    if not botPerms.move_members:
-        return False
 
     # check user is in a voice channel
     if user.voice and user.voice.channel:
@@ -123,15 +117,24 @@ async def pullToVoice(ctx:Context, user: Member):
                 break
         # move the user to the help channel
         if voiceChannel:
-            await user.move_to(voiceChannel)
-            return True
+            # check we have correct perms
+            botPerms: Permissions = voiceChannel.permissions_for(ctx.me)
+            if botPerms.move_members:
+                print(botPerms.move_members)
+                await user.move_to(voiceChannel)
+                return True
+            print("no perms")
+
+            return False
         else:
+            print("no channel")
             return False
     else:
+        print("user not in voice")
         return False
 
 
-async def assignRole(ctx:Context,member:Member):
+async def assignRole(ctx: Context, member: Member):
     """
     Attempts to assign a member a role with the same name as the channel name the command was sent in.
 
@@ -145,16 +148,20 @@ async def assignRole(ctx:Context,member:Member):
     if not botPerms.manage_roles:
         return False
 
-    #resolve the role name into a role object
+    # resolve the role name into a role object
     for role in ctx.guild.roles:
         if role.name == ctx.channel.name:
-            #get the members role
+            # get the members role
             roles = member.roles
             # add the relevant role
-            roles.append(role)
-
-            # replace their existing role list with updated one
-            await member.edit(reason="adding help role", roles=roles)
+            alreadyHasRole = False
+            for r in roles:
+                if r.id == role.id:
+                    alreadyHasRole = True
+            if not alreadyHasRole:
+                roles.append(role)
+                # replace their existing role list with updated one
+                await member.edit(reason="adding help role", roles=roles)
             return True
     return False
 
@@ -212,7 +219,7 @@ class Demonstrators(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
-    async def nextV2(self, ctx:Context):
+    async def nextV2(self, ctx: Context):
         """
         *Experimental* Get the next student in the queue
 
@@ -231,13 +238,13 @@ class Demonstrators(commands.Cog):
             if nextStudent is not None:
                 nextStudent = updateMember(ctx, nextStudent)
                 message = 'The next student in the queue is {0}, '.format(
-                            nextStudent.mention)
+                    nextStudent.mention)
                 if await pullToVoice(ctx, nextStudent):
                     message = message + 'They have been moved to your help voice channel. '
                 if await assignRole(ctx, nextStudent):
                     message = message + 'They have been assigned the role to view this channel. '
                 if message[-2:-1] == ',':
-                    message = message + '{0} can now help you in {1}.'\
+                    message = message + '{0} can now help you in {1}.' \
                         .format(ctx.message.author.mention, ctx.channel.mention)
                 prevMessages[k] = await ctx.send(message)
         else:
@@ -247,7 +254,7 @@ class Demonstrators(commands.Cog):
     @commands.command()
     @commands.has_any_role(*adminRoles)
     @commands.bot_has_permissions(manage_roles=True)
-    async def clearRole(self, ctx:Context, user:Member):
+    async def clearRole(self, ctx: Context, user: Member):
         """
         Clear the role matching the channel name from a User
 
@@ -256,7 +263,7 @@ class Demonstrators(commands.Cog):
         for role in ctx.guild.roles:
             if role.name == ctx.channel.name:
                 roles = user.roles
-                roles = filter(lambda r: r.id != role.id,roles)
+                roles = filter(lambda r: r.id != role.id, roles)
                 await user.edit(reason="adding help role", roles=roles)
 
 
@@ -304,6 +311,3 @@ class Students(commands.Cog):
         else:
             prevMessages[k] = await ctx.send(s.mention + ' is not in the queue.')
         await rmCMDMessage(ctx)
-
-
-
