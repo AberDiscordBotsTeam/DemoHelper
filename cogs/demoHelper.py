@@ -99,9 +99,9 @@ class Demonstrators(commands.Cog):
         """
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
-
-        if len(getQueue(ctx.guild)) > 0:
-            next = getQueue(ctx.guild).pop(0)
+        queue = getQueue(ctx.guild)
+        if len(queue) > 0:
+            next = queue.pop(0)
             logging.info('{0} next {1}'.format(ctx.guild, next))
             if next is not None:
                 prevMessages[k] = await ctx.send(
@@ -141,36 +141,52 @@ class Demonstrators(commands.Cog):
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
-        if len(getQueue(ctx.guild)) > 0:
-            next = getQueue(ctx.guild).pop(0)
-            logging.info('{0} next {1}'.format(ctx.guild, next))
-            if next is not None:
-                for m in ctx.guild.members:
-                    if m.id == next.id:
-                        next = m
-                        break
-                if next.voice and next.voice.channel:
-                    prevMessages[k] = await ctx.send(
-                        'The next student in the queue is {0}, They have been moved to your help voice channel.'.format(
-                            next.mention))
-                    voiceChannel = None
-                    print(ctx.channel.name)
-                    for channel in ctx.guild.channels:
-                        print(channel.name, channel.type)
-                        if channel.name == ctx.channel.name and channel.type is ChannelType.voice:
-                            voiceChannel = channel
-                            break
-                    if voiceChannel:
-                        await next.move_to(voiceChannel)
-                else:
-                    prevMessages[k] = await ctx.send(
-                        'The next student in the queue is {0}, {1} can now help you in {2} .'.format(
-                            next.mention, ctx.message.author.mention, ctx.channel.mention))
+        queue = getQueue(ctx.guild)
 
-
+        if len(queue) > 0:
+            nextStudent = queue.pop(0)
+            logging.info('{0} next {1}'.format(ctx.guild, nextStudent))
+            if nextStudent is not None:
+                nextStudent = updateMember(ctx, nextStudent)
+                message = 'The next student in the queue is {0}, '.format(
+                            nextStudent.mention)
+                if await pullToVoice(ctx, nextStudent):
+                    message = message + 'They have been moved to your help voice channel. '
+                if await assignRole(ctx, nextStudent):
+                    message = message + 'They have been assigned the role to view this channel. '
+                if message[-2:-1] == ',':
+                    message = message + '{0} can now help you in {1}.'\
+                        .format(ctx.message.author.mention, ctx.channel.mention)
+                prevMessages[k] = await ctx.send(message)
         else:
             prevMessages[k] = await ctx.send('No more students in the queue.')
         await rmCMDMessage(ctx)
+
+
+def updateMember(ctx:Context, m:Member):
+    for m1 in ctx.guild.members:
+        if m1.id == m.id:
+            return m1
+    return m
+
+
+async def pullToVoice(ctx:Context, nextStudent: Member):
+    if nextStudent.voice and nextStudent.voice.channel:
+        voiceChannel = None
+        for channel in ctx.guild.channels:
+            if channel.name == ctx.channel.name and channel.type is ChannelType.voice:
+                voiceChannel = channel
+                break
+        if voiceChannel:
+            await nextStudent.move_to(voiceChannel)
+        return True
+    else:
+        return False
+
+
+async def assignRole(ctx:Context,member:Member):
+    #todo implement
+    pass
 
 
 class Students(commands.Cog):
