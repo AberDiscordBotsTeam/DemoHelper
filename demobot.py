@@ -43,6 +43,7 @@ helpCommand.cog = generalCog
 
 # load other cogs
 bot.load_extension("cogs.demoHelper")
+bot.load_extension("cogs.utilities")
 
 
 @bot.event
