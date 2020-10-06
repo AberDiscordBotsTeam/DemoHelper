@@ -69,7 +69,7 @@ async def activity_loop():
             i = 0
 
         for guild in bot.guilds:
-            memb = memb + len(guild.members)
+            memb = memb + guild.member_count
 
         status = [f'{str(len(bot.guilds))} servers', f'{memb} members', '!help | !feedback']
 
