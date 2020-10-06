@@ -7,12 +7,11 @@ from discord.ext.commands import Context
 import logging
 import shelve
 
+from cogs import adminRoles, addMessageFile
 from helpers import listPrint
 
 queues = {'dummy': []}
-# Possible roles available for the user to add allowing them to use all the bot commands
-adminRoles = ['Demonstrator', 'demonstrator', 'DEMONSTRATOR', 'Admin role', 'ADMIN ROLE', 'Admin', 'Devs', 'lecturer',
-              'LECTURER', 'advisor']
+
 
 # somewhere to store the last message sent per guild per channel.
 # key used is the guild name + the channel name.
@@ -54,7 +53,6 @@ def setup(bot):
     """
     bot.add_cog(Students(bot))
     bot.add_cog(Demonstrators(bot))
-    bot.add_cog(Utilities(bot))
 
 
 def getQueue(serverName: str):
@@ -76,7 +74,7 @@ def getCustomAddMessage(serverName: str):
     :param serverName: the server you want the queue for
     :return: The add message for this server.
     """
-    with shelve.open('addMessage.shelve') as db:
+    with shelve.open(addMessageFile) as db:
         if str(serverName) in db:
             return db.get(str(serverName))
         else:
@@ -174,47 +172,4 @@ class Students(commands.Cog):
         await rmCMDMessage(ctx)
 
 
-class Utilities(commands.Cog):
-    """
-    General Utilities
-    """
 
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
-    @commands.bot_has_permissions(manage_messages=True)
-    async def clear(self, ctx: Context):
-        """
-        Clears all messages in a channel that are less than 14 days old
-        """
-        counter = 0
-        async for message in ctx.channel.history(limit=1000):
-            counter += 1
-        await ctx.channel.purge()
-        await ctx.channel.send('Success! Messages deleted: `' + str(counter) + '`, this message will delete in 5 '
-                                                                               'seconds')
-        await asyncio.sleep(5)
-        await ctx.channel.purge(limit=1)
-
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
-    async def setAddMessage(self, ctx: Context, *, message: str):
-        """
-        Change the default add message
-        :param message: The new add message to set.
-        """
-        logging.info('{0} setAddMessage {1}'.format(ctx.guild, message))
-        with shelve.open('addMessage.shelve') as db:
-            db[str(ctx.guild)] = message
-        await ctx.send('Anyone added to queue will see this msg:\n' + message)
-
-    @commands.command()
-    async def ping(self, ctx: Context):
-        """
-        Status check
-        """
-        import time
-        start_time = time.time()
-        message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms`')
-        end_time = time.time()
-        await message.edit(content='pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms` '
-                            '`Response time: ' + str(round(end_time-start_time, 3)) + 'ms`')
