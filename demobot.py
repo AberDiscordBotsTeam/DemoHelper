@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 import logging
@@ -52,9 +53,31 @@ async def on_ready():
     Do something when the bot is ready to use.
     """
     print(f'{bot.user.name} has connected to Discord!')
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, 
-                                                        name=f'{str(len(bot.guilds))} servers'))
 
+
+async def activity_loop():
+    """
+    Cycles through different bot activities
+    """
+    await bot.wait_until_ready()
+    i = 0
+    memb = 0
+    for guild in bot.guilds:
+        for member in guild.members:
+            memb += 1
+
+    status = [f'{str(len(bot.guilds))} servers', f'{memb} members', '!help | !feedback']
+
+    while not bot.is_closed():
+        if i > 2:
+            i = 0
+
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
+        i += 1
+
+        await asyncio.sleep(4)
+
+bot.loop.create_task(activity_loop())
 
 @bot.event
 async def on_command_error(ctx, error):
