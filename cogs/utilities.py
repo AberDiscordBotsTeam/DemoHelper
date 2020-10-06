@@ -22,6 +22,34 @@ class Utilities(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
+    @commands.bot_has_permissions(manage_messages=True, manage_roles=True)
+    async def checkRoles(self, ctx: Context):
+        # check server wide perms
+        perms = None
+        for r in ctx.me.roles:
+            print(r, ctx.me.name)
+            if r.name[0:4] == 'Demo': # need better way to do this crap.
+                perms = r.permissions
+                break
+        # does't work.. perms = ctx.guild.permissions_for(ctx.me)
+        if perms and not perms.move_members:
+            await ctx.send('Bot requires Move Members permission(s)')
+        else:
+            await ctx.send(
+                """
+If you are reading this demoBot has all the permissions it needs for: `nextV2`.
+                
+Just double check the help voice and text channels have matching names: 
+e.g. `help-1` `help-1` and not `help 1` `help-1`.
+                
+Optionally:
+You can hide the help channels for `@everyone` and `verified`.
+And create matching `help-1` roles that has the permissions for the user to view/join the corresponding `help-1` text and voice channels. 
+You can also set the `help-1` role to hide channel history so the student can't see the message history of the channel.
+""")
+
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
     @commands.bot_has_permissions(manage_messages=True)
     async def clear(self, ctx: Context):
         """
@@ -67,7 +95,8 @@ class Utilities(commands.Cog):
         """
         import time
         start_time = time.time()
-        message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms`')
+        message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms`')
         end_time = time.time()
-        await message.edit(content='pong. `DWSP latency: ' + str(round(ctx.bot.latency*1000)) + 'ms` '
-                            '`Response time: ' + str(round(end_time-start_time, 3)) + 'ms`')
+        await message.edit(content='pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` '
+                                                                                                  '`Response time: ' + str(
+            round(end_time - start_time, 3)) + 'ms`')
