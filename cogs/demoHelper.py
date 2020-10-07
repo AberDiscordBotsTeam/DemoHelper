@@ -260,11 +260,15 @@ class Demonstrators(commands.Cog):
 
         :param user: The user to remove the role from  use ( @User ) syntax
         """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(ctx, k)
         for role in ctx.guild.roles:
             if role.name == ctx.channel.name:
                 roles = user.roles
                 roles = filter(lambda r: r.id != role.id, roles)
                 await user.edit(reason="adding help role", roles=roles)
+        await ctx.send(f'roles cleared for {format(ctx.message.author.mention)}')
+        await rmCMDMessage(ctx)
 
 
 class Students(commands.Cog):
