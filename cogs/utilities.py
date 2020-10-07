@@ -43,7 +43,7 @@ Just double check the help voice and text channels have matching names:
 e.g. `help-1` `help-1` and not `help 1` `help-1`.
                 
 Optionally:
-You can hide the help channels for `@everyone` and `@verified`.
+You can hide the help channels for `@everyone` and `verified`.
 And create matching `help-1` roles that has the permissions for the user to view/join the corresponding `help-1` text and voice channels. 
 You can also set the `help-1` role to hide channel history so the student can't see the message history of the channel.
 """)
