@@ -209,13 +209,12 @@ class Demonstrators(commands.Cog):
         queue = getQueue(ctx.guild)
         temp = []
         for x in queue:
-            temp.append(x.mention)
+            temp.append(x)
         queue = temp
         if queue is None or len(queue) == 0:
-            prevMessages[k] = await ctx.send('No students in the Queue.')
+            await ctx.send('No students in the Queue.')
         else:
-            prevMessages[k] = await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
-        await rmCMDMessage(ctx)
+            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
