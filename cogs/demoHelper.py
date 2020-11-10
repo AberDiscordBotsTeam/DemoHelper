@@ -215,6 +215,7 @@ class Demonstrators(commands.Cog):
             await ctx.send('No students in the Queue.')
         else:
             await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
+        await rmCMDMessage(ctx)
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
@@ -266,7 +267,7 @@ class Demonstrators(commands.Cog):
                 roles = user.roles
                 roles = filter(lambda r: r.id != role.id, roles)
                 await user.edit(reason="adding help role", roles=roles)
-        await ctx.send(f'roles cleared for {format(ctx.message.author.mention)}')
+        await ctx.send(f'roles cleared for {format(user.mention)}')
         await rmCMDMessage(ctx)
 
 
