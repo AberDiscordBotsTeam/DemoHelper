@@ -176,28 +176,6 @@ class Demonstrators(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
-    async def next(self, ctx: Context):
-        """
-        Get the next student in the queue
-
-        Nothing fancy.
-        """
-        k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx, k)
-        queue = getQueue(ctx.guild)
-        if len(queue) > 0:
-            next = queue.pop(0)
-            logging.info('{0} next {1}'.format(ctx.guild, next))
-            if next is not None:
-                prevMessages[k] = await ctx.send(
-                    'The next student in the queue is {0}, {1} will be with you shortly to signoff or help you.'.format(
-                        next.mention, ctx.message.author.mention))
-        else:
-            prevMessages[k] = await ctx.send('No more students in the queue.')
-        await rmCMDMessage(ctx)
-
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
     async def print(self, ctx: Context):
         """
         Print out the students in the queue
@@ -219,13 +197,11 @@ class Demonstrators(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
-    async def nextV2(self, ctx: Context):
+    async def next(self, ctx: Context):
         """
-        *Experimental* Get the next student in the queue
-
-        It will also attempt to move the student to a voice channel with matching name.
-        and attempt to assign a role with a matching name.
-        You can use clearRole command to clear the role if one was set.
+        Gets the next student in the queue and moves them to your voice channel (if this doesn't work use checkRoles)
+        It will attempt to assign a role with a matching name.
+        You can use !clearRole command to clear the role if one was set.
         """
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
