@@ -176,27 +176,6 @@ class Demonstrators(commands.Cog):
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
-    async def print(self, ctx: Context):
-        """
-        Print out the students in the queue
-        """
-        k = ctx.guild.name + ctx.channel.name
-        await rmPrevMessage(ctx, k)
-
-        logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
-        queue = getQueue(ctx.guild)
-        temp = []
-        for x in queue:
-            temp.append(x)
-        queue = temp
-        if queue is None or len(queue) == 0:
-            await ctx.send('No students in the Queue.')
-        else:
-            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
-        await rmCMDMessage(ctx)
-
-    @commands.command()
-    @commands.has_any_role(*adminRoles)
     async def next(self, ctx: Context):
         """
         Gets next student in the queue and moves them to the vc
@@ -292,4 +271,24 @@ class Students(commands.Cog):
             prevMessages[k] = await ctx.send(s.mention + ' has been removed from queue.')
         else:
             prevMessages[k] = await ctx.send(s.mention + ' is not in the queue.')
+        await rmCMDMessage(ctx)
+
+    @commands.command(aliases=['queue'])
+    async def print(self, ctx: Context):
+        """
+        Print out the students in the queue (Aliases: queue)
+        """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(ctx, k)
+
+        logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
+        queue = getQueue(ctx.guild)
+        temp = []
+        for x in queue:
+            temp.append(x)
+        queue = temp
+        if queue is None or len(queue) == 0:
+            await ctx.send('No students in the Queue.')
+        else:
+            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
         await rmCMDMessage(ctx)
