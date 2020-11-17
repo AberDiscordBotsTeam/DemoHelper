@@ -199,7 +199,9 @@ class Demonstrators(commands.Cog):
     @commands.has_any_role(*adminRoles)
     async def next(self, ctx: Context):
         """
-        Gets the next student in the queue and moves them to your voice channel (if this doesn't work use checkRoles)
+        Gets next student in the queue and moves them to the vc
+
+        If this doesn't work use !checkRoles to see if the bot has sufficient roles to do this
         It will attempt to assign a role with a matching name.
         You can use !clearRole command to clear the role if one was set.
         """

@@ -53,7 +53,8 @@ You can also set the `help-1` role to hide channel history so the student can't 
     @commands.bot_has_permissions(manage_messages=True)
     async def clear(self, ctx: Context):
         """
-        Clears all messages in a channel that are less than 14 days old
+        *Warning* Clears all messages in a channel
+        that are less than 14 days old
         """
         counter = 0
         async for message in ctx.channel.history(limit=1000):
