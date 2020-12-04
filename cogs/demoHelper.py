@@ -225,6 +225,16 @@ class Demonstrators(commands.Cog):
         await ctx.send(f'Role cleared for {format(user.mention)}')
         await rmCMDMessage(ctx)
 
+    @commands.command()
+    @commands.has_any_role(*adminRoles)
+    async def clearQueue(self, ctx: Context):
+        """
+        Clears the queue
+        """
+        q = getQueue(ctx.guild)
+        q.clear()
+        await ctx.send('The queue has been cleared')
+
 
 class Students(commands.Cog):
     """
