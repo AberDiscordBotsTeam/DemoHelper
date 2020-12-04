@@ -94,7 +94,7 @@ def getCustomAddMessage(serverName: str):
 
 def updateMember(ctx: Context, m: Member):
     """
-    If you have a member object from a previous command that needs updating. This fucntion si for you.
+    If you have a member object from a previous command that needs updating. This function si for you.
 
     :param ctx: the discord message context to get updated member form
     :param m: the outdated member object,
