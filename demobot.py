@@ -5,7 +5,7 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord.ext.commands import Context, DefaultHelpCommand
+from discord.ext.commands import DefaultHelpCommand
 from dotenv import load_dotenv
 from cogs.general import General
 
