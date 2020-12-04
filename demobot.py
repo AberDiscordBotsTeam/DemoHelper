@@ -89,6 +89,8 @@ async def on_command_error(ctx, error):
         await ctx.send('You are missing a required argument.')
     elif isinstance(error, commands.errors.CommandNotFound):
         pass
+    elif isinstance(error, commands.errors.BadArgument):
+        await ctx.send('Please input a users @username instead. e.g. !clearRole @Joel Adams')
     else:
         await ctx.send('Something went wrong, please contact an Admin.')
         logging.error(error)
