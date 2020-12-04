@@ -212,7 +212,7 @@ class Demonstrators(commands.Cog):
         """
         Clear the role matching the channel name from a User
 
-        :param ctx:
+        :param ctx: Context
         :param user: The user to remove the role from  use ( @User ) syntax
         """
         k = ctx.guild.name + ctx.channel.name
@@ -222,7 +222,7 @@ class Demonstrators(commands.Cog):
                 roles = user.roles
                 roles = filter(lambda r: r.id != role.id, roles)
                 await user.edit(reason="adding help role", roles=roles)
-        await ctx.send(f'roles cleared for {format(user.mention)}')
+        await ctx.send(f'Role cleared for {format(user.mention)}')
         await rmCMDMessage(ctx)
 
 

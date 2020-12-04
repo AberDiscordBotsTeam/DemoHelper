@@ -31,7 +31,7 @@ class Utilities(commands.Cog):
             if r.name[0:4] == 'Demo': # need better way to do this crap.
                 perms = r.permissions
                 break
-        # does't work.. perms = ctx.guild.permissions_for(ctx.me)
+        # doesn't work.. perms = ctx.guild.permissions_for(ctx.me)
         if perms and not perms.move_members:
             await ctx.send('Bot requires Move Members permission(s)')
         else:
