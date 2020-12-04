@@ -52,7 +52,7 @@ class Utilities(commands.Cog):
     @commands.command()
     @commands.has_any_role(*adminRoles)
     @commands.bot_has_permissions(manage_messages=True)
-    async def clear(self, ctx: Context):
+    async def clearMessages(self, ctx: Context):
         """
         *Warning* Clears all messages in a channel
         that are less than 14 days old
