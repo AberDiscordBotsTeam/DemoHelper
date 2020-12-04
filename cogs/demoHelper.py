@@ -1,7 +1,4 @@
-import asyncio
-
-import discord
-from discord import Member, VoiceChannel, Guild, ChannelType
+from discord import Member, ChannelType
 from discord import Permissions
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -215,6 +212,7 @@ class Demonstrators(commands.Cog):
         """
         Clear the role matching the channel name from a User
 
+        :param ctx:
         :param user: The user to remove the role from  use ( @User ) syntax
         """
         k = ctx.guild.name + ctx.channel.name
