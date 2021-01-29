@@ -99,5 +99,5 @@ class Utilities(commands.Cog):
         start_time = time.time()
         message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms`')
         end_time = time.time()
-        await message.edit(content='pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` ' +
+        await message.edit(content='🏓 pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` ' +
                                    '`Response time: ' + str(int((end_time - start_time) * 1000)) + 'ms`')
