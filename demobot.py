@@ -91,6 +91,8 @@ async def on_command_error(ctx, error):
         pass
     elif isinstance(error, commands.errors.BadArgument):
         await ctx.send('Please input a users @username instead. e.g. !clearRole @Joel Adams')
+    elif bot.is_ws_ratelimited():
+        await ctx.send("The bot is currently being rate limited due to high traffic, please wait a few seconds and try again")
     else:
         await ctx.send('Something went wrong, please contact an Admin.')
         logging.error(error)
