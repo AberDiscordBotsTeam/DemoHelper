@@ -182,12 +182,13 @@ class Demonstrators(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=['n'])
     @commands.has_any_role(*adminRoles)
     async def next(self, ctx: Context):
         """
-        Gets next student in the queue and moves them to the vc
-
+        Gets next student in the queue and moves them to the vc 
+        
+        (Aliases: n)
         If this doesn't work use !checkRoles to see if the bot has sufficient roles to do this
         It will attempt to assign a role with a matching name.
         You can use !clearRole command to clear the role if one was set.
@@ -216,13 +217,14 @@ class Demonstrators(commands.Cog):
             prevMessages[k] = await ctx.send('No more students in the queue.')
         await rmCMDMessage(ctx)
 
-    @commands.command()
+    @commands.command(aliases=['cr'])
     @commands.has_any_role(*adminRoles)
     @commands.bot_has_permissions(manage_roles=True)
     async def clearRole(self, ctx: Context, user: Member):
         """
         Clear the role matching the channel name from a User
 
+        (Aliases: cr)
         :param ctx: Context
         :param user: The user to remove the role from  use ( @User ) syntax
         """
@@ -236,11 +238,11 @@ class Demonstrators(commands.Cog):
         await ctx.send(f'Role cleared for {format(user.mention)}')
         await rmCMDMessage(ctx)
 
-    @commands.command()
+    @commands.command(aliases=['cq'])
     @commands.has_any_role(*adminRoles)
     async def clearQueue(self, ctx: Context):
         """
-        Clears the queue
+        Clears the queue (Aliases: cq)
         """
         q = getQueue(ctx.guild)
         q.clear()
@@ -255,10 +257,10 @@ class Students(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=['a'])
     async def add(self, ctx: Context):
         """
-        Adds the student to the help queue
+        Adds the student to the help queue (Aliases: a)
         """
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
@@ -274,10 +276,10 @@ class Students(commands.Cog):
             prevMessages[k] = await ctx.send(s.mention + ' is already in the queue.')
         await rmCMDMessage(ctx)
 
-    @commands.command()
+    @commands.command(aliases=['r'])
     async def remove(self, ctx: Context):
         """
-        Removes the student from the help queue
+        Removes the student from the help queue (Aliases: r)
         """
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
