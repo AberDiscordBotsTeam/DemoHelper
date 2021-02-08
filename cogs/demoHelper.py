@@ -5,6 +5,7 @@ from discord.ext.commands import Context
 
 import logging
 import shelve
+from demobot import prefix
 
 from cogs import adminRoles, addMessageFile
 
@@ -74,7 +75,7 @@ def listPrint(list):
     """
     out = ''
     for l in list:
-        out = out + str(l) + ', '
+        out = out + str(l.name) + ', '
     return out[:-2]
 
 
@@ -314,22 +315,20 @@ class Students(commands.Cog):
             prevMessages[k] = await ctx.send(s.mention + ' is not in the queue.')
         await rmCMDMessage(ctx)
 
-    @commands.command(aliases=['queue'])
+    @commands.command(aliases=['p'])
     async def print(self, ctx: Context):
         """
-        Print out the students in the queue (Aliases: queue)
+        Print out the student's position in the queue (Aliases: p)
         """
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
         logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
-        queue = getQueue(ctx.guild)
-        temp = []
-        for x in queue:
-            temp.append(x)
-        queue = temp
-        if queue is None or len(queue) == 0:
-            await ctx.send('No students in the Queue.')
+        s = ctx.message.author
+        q = getQueue(ctx.guild)
+        if s in q:
+            logging.info('{0} prints {1}'.format(ctx.guild, s))
+            await ctx.send('{0}, you are in position `{1}` in the queue'.format(s.mention, q.index(s)))
         else:
-            await ctx.send('Remaining students in the queue are {0}'.format(listPrint(queue)))
-        await rmCMDMessage(ctx)
+            logging.info('{0} not prints {1}'.format(ctx.guild, s))
+            await ctx.send('{0}, you are not in the queue. Please add yourself using {1}add'.format(s.mention, prefix))
