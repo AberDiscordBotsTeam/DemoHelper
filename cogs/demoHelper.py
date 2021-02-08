@@ -332,3 +332,4 @@ class Students(commands.Cog):
         else:
             logging.info('{0} not prints {1}'.format(ctx.guild, s))
             await ctx.send('{0}, you are not in the queue. Please add yourself using {1}add'.format(s.mention, prefix))
+        await rmCMDMessage(ctx)
