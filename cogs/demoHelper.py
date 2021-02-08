@@ -248,6 +248,26 @@ class Demonstrators(commands.Cog):
         q.clear()
         await ctx.send('The queue has been cleared')
 
+    @commands.command(aliases=['queue'])
+    @commands.has_any_role(*adminRoles)
+    async def printUsers(self, ctx: Context):
+        """
+        Print out the students in the queue (Aliases: queue)
+        """
+        k = ctx.guild.name + ctx.channel.name
+        await rmPrevMessage(ctx, k)
+
+        logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
+        queue = getQueue(ctx.guild)
+        temp = []
+        for x in queue:
+            temp.append(x)
+        queue = temp
+        if queue is None or len(queue) == 0:
+            await ctx.send('No students in the Queue.')
+        else:
+            await ctx.send('`{0}` students in the queue: {1}'.format(len(queue), listPrint(queue)))
+        await rmCMDMessage(ctx)
 
 class Students(commands.Cog):
     """
