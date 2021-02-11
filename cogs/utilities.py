@@ -49,7 +49,7 @@ class Utilities(commands.Cog):
                 student can't see the message history of the channel.
                 """)
 
-    @commands.command()
+    @commands.command(aliases=['cm'])
     @commands.has_any_role(*adminRoles)
     @commands.bot_has_permissions(manage_messages=True)
     async def clearMessages(self, ctx: Context):
