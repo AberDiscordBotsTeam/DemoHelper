@@ -8,6 +8,7 @@ import shelve
 from demobot import prefix
 
 from cogs import adminRoles, addMessageFile
+from demobot import logger as logging
 
 queues = {'dummy': []}
 
@@ -201,7 +202,7 @@ class Demonstrators(commands.Cog):
 
         if len(queue) > 0:
             nextStudent = queue.pop(0)
-            logging.info('{0} next {1}'.format(ctx.guild, nextStudent))
+            logging.info('{0}: #{1} next student is {2} by {3}'.format(ctx.guild, ctx.channel.name, nextStudent, ctx.message.author))
             if nextStudent is not None:
                 nextStudent = updateMember(ctx, nextStudent)
                 message = 'The next student in the queue is {0}, '.format(
@@ -237,6 +238,7 @@ class Demonstrators(commands.Cog):
                 roles = filter(lambda r: r.id != role.id, roles)
                 await user.edit(reason="adding help role", roles=roles)
         await ctx.send(f'Role cleared for {format(user.mention)}')
+        logging.info('{0}: #{1} cleared roles for {2} by {3}'.format(ctx.guild, ctx.channel.name, user, ctx.message.author))
         await rmCMDMessage(ctx)
 
     @commands.command(aliases=['cq'])
@@ -245,6 +247,7 @@ class Demonstrators(commands.Cog):
         """
         Clears the queue (Aliases: cq)
         """
+        logging.info('{0}: #{1} cleared queue by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
         q = getQueue(ctx.guild)
         q.clear()
         await ctx.send('The queue has been cleared')
@@ -258,7 +261,7 @@ class Demonstrators(commands.Cog):
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
-        logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
+        logging.info('{0}: #{1} print users {2}'.format(ctx.guild, ctx.channel.name, getQueue(ctx.guild)))
         queue = getQueue(ctx.guild)
         temp = []
         for x in queue:
@@ -290,11 +293,11 @@ class Students(commands.Cog):
         q = getQueue(ctx.guild)
         if s not in q:
             q.append(s)
-            logging.info('{0} add {1}'.format(ctx.guild, s))
-            prevMessages[k] = await ctx.send(
-                s.mention + ' has been added to the queue. ' + getCustomAddMessage(ctx.guild))
+            logging.info('{0}: #{1} added student to queue {2}'.format(ctx.guild, ctx.channel.name, s))
+            prevMessages[k] = await ctx.send('{0}, you have been added to the queue at position `{1}`. {2}'.format(s.mention, q.index(s), getCustomAddMessage(ctx.guild)))
         else:
-            prevMessages[k] = await ctx.send(s.mention + ' is already in the queue.')
+            logging.info('{0}: #{1} added student to queue (already in queue) {2}'.format(ctx.guild, ctx.channel.name, s))
+            prevMessages[k] = await ctx.send('{0}, you are already in the queue at position `{1}`.'.format(s.mention, q.index(s)))
         await rmCMDMessage(ctx)
 
     @commands.command(aliases=['r'])
@@ -309,10 +312,11 @@ class Students(commands.Cog):
         q = getQueue(ctx.guild)
         if s in q:
             q.remove(s)
-            logging.info('{0} remove {1}'.format(ctx.guild, s))
-            prevMessages[k] = await ctx.send(s.mention + ' has been removed from queue.')
+            logging.info('{0}: #{1} removed {2}'.format(ctx.guild, ctx.channel.name, s))
+            prevMessages[k] = await ctx.send('{0}, you have been removed from queue.'.format(s.mention))
         else:
-            prevMessages[k] = await ctx.send(s.mention + ' is not in the queue.')
+            logging.info('{0}: #{1} removed (not in queue) {2}'.format(ctx.guild, ctx.channel.name, s))
+            prevMessages[k] = await ctx.send('{0}, you are not in the queue.'.format(s.mention))
         await rmCMDMessage(ctx)
 
     @commands.command(aliases=['p'])
@@ -323,13 +327,12 @@ class Students(commands.Cog):
         k = ctx.guild.name + ctx.channel.name
         await rmPrevMessage(ctx, k)
 
-        logging.info('{0} queue {1}'.format(ctx.guild, getQueue(ctx.guild)))
         s = ctx.message.author
         q = getQueue(ctx.guild)
         if s in q:
-            logging.info('{0} prints {1}'.format(ctx.guild, s))
+            logging.info('{0}: #{1} student print {2}'.format(ctx.guild, ctx.channel.name, s))
             await ctx.send('{0}, you are in position `{1}` in the queue'.format(s.mention, q.index(s)))
         else:
-            logging.info('{0} not prints {1}'.format(ctx.guild, s))
+            logging.info('{0}: #{1} student print (not in queue) {2}'.format(ctx.guild, ctx.channel.name, s))
             await ctx.send('{0}, you are not in the queue. Please add yourself using {1}add'.format(s.mention, prefix))
         await rmCMDMessage(ctx)

@@ -6,7 +6,7 @@ from discord.ext import commands
 from discord.ext.commands import Context
 
 from cogs import adminRoles, addMessageFile
-
+from demobot import logger as logging
 
 def setup(bot):
     """
@@ -57,6 +57,7 @@ class Utilities(commands.Cog):
         *Warning* Clears all messages in a channel
         that are less than 14 days old
         """
+        logging.info('{0}: #{1} messages cleared by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
         counter = 0
         async for message in ctx.channel.history(limit=1000):
             counter += 1
@@ -73,7 +74,7 @@ class Utilities(commands.Cog):
         Change the default add message
         :param message: The new add message to set.
         """
-        logging.info('{0} setAddMessage {1}'.format(ctx.guild, message))
+        logging.info('{0}: #{1} setAddMessage to "{2}" by {3}'.format(ctx.guild, ctx.channel.name, message, ctx.message.author))
         with shelve.open(addMessageFile) as db:
             db[str(ctx.guild)] = message
         await ctx.send('Anyone added to queue will see this msg:\n' + message)
@@ -84,6 +85,7 @@ class Utilities(commands.Cog):
         """
         Resets the custom add message
         """
+        logging.info('{0}: #{1} resteAddMessage by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
         serverName = ctx.guild
         with shelve.open(addMessageFile) as db:
             if str(serverName) in db:
@@ -101,3 +103,4 @@ class Utilities(commands.Cog):
         end_time = time.time()
         await message.edit(content='🏓 pong `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` ' +
                                    '`Response time: ' + str(int((end_time - start_time) * 1000)) + 'ms`')
+        logging.info('{0}: #{1} ping by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
