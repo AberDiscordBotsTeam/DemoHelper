@@ -6,6 +6,7 @@ import logging
 import discord
 from discord.ext import commands
 from discord.ext.commands import DefaultHelpCommand
+from discord.flags import Intents
 from dotenv import load_dotenv
 from cogs.general import General
 
@@ -35,6 +36,7 @@ if not prefix:
 bot = commands.Bot(
     command_prefix=prefix,
     help_command=helpCommand,
+    intents=discord.Intents.all()
 )
 
 # Setup the General cog with the help command
@@ -63,15 +65,15 @@ async def activity_loop():
     await bot.wait_until_ready()
     i = 0
     while not bot.is_closed():
-        memb = 0
 
         if i > 2:
             i = 0
 
+        memb = set()
         for guild in bot.guilds:
-            memb = memb + guild.member_count
+            memb.update(guild.members)
 
-        status = [f'{str(len(bot.guilds))} servers', f'{memb} members', '!help | !feedback']
+        status = [f'{str(len(bot.guilds))} servers', f'{len(memb)} members', '!help | !feedback']
 
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
         i += 1
