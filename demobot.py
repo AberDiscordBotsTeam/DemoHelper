@@ -73,7 +73,7 @@ async def activity_loop():
         for guild in bot.guilds:
             memb.update(guild.members)
 
-        status = [f'{str(len(bot.guilds))} servers', f'{len(memb)} members', '!help | !feedback']
+        status = [f'{len(bot.guilds)} servers', f'{len(memb)} members', '!help | !feedback']
 
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
         i += 1
