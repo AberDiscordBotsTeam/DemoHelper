@@ -1,5 +1,5 @@
 # DemoHelper bot
-[![Discord Chat](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/)  
+[![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/)  
 stores a queue of people waiting for demonstrators to help them with their work or sign-off
 
 **Please note:**  The user requires one of the following roles with the same name to have full access to all 
