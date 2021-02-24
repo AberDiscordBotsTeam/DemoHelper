@@ -57,15 +57,23 @@ class Utilities(commands.Cog):
         *Warning* Clears all messages in a channel
         that are less than 14 days old
         """
-        logging.info('{0}: #{1} messages cleared by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
-        counter = 0
-        async for message in ctx.channel.history(limit=1000):
-            counter += 1
-        await ctx.channel.purge()
-        await ctx.channel.send('Success! Messages deleted: `' + str(counter) + '`, this message will delete in 5 '
-                                                                               'seconds')
-        await asyncio.sleep(5)
-        await ctx.channel.purge(limit=1)
+        msg = await ctx.send('Are you sure you want to clear messages?')
+        await msg.add_reaction('👍')
+        await msg.add_reaction('👎')
+
+        def check(_, user):
+            return user == ctx.message.author
+
+        reaction, _ = await ctx.bot.wait_for('reaction_add', check=check)
+
+        if str(reaction.emoji) == '👍':
+            logging.info('{0}: #{1} messages cleared by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
+            counter = await ctx.channel.purge()
+            msg = await ctx.channel.send(f'Success! Messages deleted: `{len(counter)}`, this message will delete in 5 seconds')
+            await asyncio.sleep(5)
+            await msg.delete()
+        elif str(reaction.emoji) == '👎':
+            await ctx.send('Messages have not been cleared')
 
     @commands.command()
     @commands.has_any_role(*adminRoles)
