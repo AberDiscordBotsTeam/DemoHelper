@@ -73,6 +73,7 @@ class Utilities(commands.Cog):
             await asyncio.sleep(5)
             await msg.delete()
         elif str(reaction.emoji) == '👎':
+            await msg.delete()
             await ctx.send('Messages have not been cleared')
 
     @commands.command()
