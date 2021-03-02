@@ -6,7 +6,6 @@ import logging
 import discord
 from discord.ext import commands
 from discord.ext.commands import DefaultHelpCommand
-from discord.flags import Intents
 from dotenv import load_dotenv
 from cogs.general import General
 
@@ -68,12 +67,13 @@ async def activity_loop():
 
         if i > 2:
             i = 0
-
+        '''
         memb = set()
         for guild in bot.guilds:
             memb.update(guild.members)
+        '''
 
-        status = [f'{len(bot.guilds)} servers', f'{len(memb)} members', '!help | !feedback']
+        status = [f'{len(bot.guilds)} servers', f'{1300} members', '!help | !feedback']
 
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
         i += 1
