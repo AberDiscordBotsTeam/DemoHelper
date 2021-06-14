@@ -113,3 +113,10 @@ class Utilities(commands.Cog):
         await message.edit(content='🏓 pong `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` ' +
                                    '`Response time: ' + str(int((end_time - start_time) * 1000)) + 'ms`')
         logging.info('{0}: #{1} ping by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
+        
+    @commands.command()
+    async def getBotLink(self, ctx: Context):
+        """
+        Returns the link to invite this bot to your server
+        """
+        await ctx.send('https://discord.com/oauth2/authorize?client_id=690608026285244447&permissions=3072&scope=bot')
