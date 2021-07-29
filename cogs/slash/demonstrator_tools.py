@@ -119,12 +119,12 @@ class DemonstratorTools(commands.Cog):
             options=[
                 create_select_option('Next', value='Next', emoji="👩"),
 
-                create_select_option('Display Queue', value='Display Queue', emoji="✉"),
+                create_select_option('Display Queue', value='Display Queue', emoji="📟"),
 
-                create_select_option('Clear Queue', value='Clear Queue', emoji="✉"),
-                create_select_option('Clear Role', value='Clear Role', emoji="✉"),
+                create_select_option('Clear Queue', value='Clear Queue', emoji="🧹"),
+                create_select_option('Clear Role', value='Clear Role', emoji="🧹"),
 
-                create_select_option('Purge Channel', value='Purge Channel', emoji="✉")
+                create_select_option('Purge Channel', value='Purge Channel', emoji="🧹")
             ],
             placeholder="Utility selection",
             min_values=1,
