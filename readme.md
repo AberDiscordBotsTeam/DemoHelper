@@ -28,6 +28,7 @@ This file stores secrets such as the Discord Token.
 A template can be seen below:
 ```
 DISCORD_TOKEN=""
+INVITE_URL=""
 ```
 
 # 4. Installing DemoHelper on Your Hosting Server
