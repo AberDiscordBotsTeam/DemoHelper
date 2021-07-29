@@ -19,7 +19,7 @@ admin_roles = [
 add_message_file = 'addMessage.shelve'
 
 
-async def move_user_to_voice_channel(ctx: Context, user: Member):
+async def move_user_to_voice_channel(ctx, user: Member):
     if user.voice and user.voice.channel:
         voice_channel = None
         for channel in ctx.guild.channels:
@@ -35,7 +35,7 @@ async def move_user_to_voice_channel(ctx: Context, user: Member):
     return False
 
 
-async def pull_to_voice(ctx: Context, user: Member):
+async def pull_to_voice(ctx, user: Member):
     """
     Attempts to pull a user to a voice channel with the same name as the current text channel.
 
@@ -54,15 +54,8 @@ async def pull_to_voice(ctx: Context, user: Member):
                 break
         # move the user to the help channel
         if voice_channel:
-            # check we have correct perms
-            bot_perms: Permissions = voice_channel.permissions_for(ctx.me)
-            if bot_perms.move_members:
-                print(bot_perms.move_members)
-                await user.move_to(voice_channel)
-                return True
-            print("no perms")
-
-            return False
+            await user.move_to(voice_channel)
+            return True
         else:
             print("no channel")
             return False
@@ -71,11 +64,7 @@ async def pull_to_voice(ctx: Context, user: Member):
         return False
 
 
-async def assign_role(ctx: Context, member: Member):
-    bot_perms: Permissions = ctx.channel.permissions_for(ctx.me)
-    if not bot_perms.manage_roles:
-        return False
-
+async def assign_role(ctx, member: Member):
     # resolve the role name into a role object
     for guild_role in ctx.guild.roles:
         if guild_role.name == ctx.channel.name:
@@ -94,7 +83,7 @@ async def assign_role(ctx: Context, member: Member):
     return False
 
 
-def update_member(ctx: Context, member: Member):
+def update_member(ctx, member: Member):
     """
     If you have a member object from a previous command that needs updating. This function is for you.
 
