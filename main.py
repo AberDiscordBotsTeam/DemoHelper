@@ -42,38 +42,35 @@ async def on_ready():
     """
     Do something when the bot is ready to use.
     """
-    bot.loop.create_task(activity_loop())
+    bot.loop.create_task(status_readout_loop())
     print(f'------------------------------------------------------------------------------'
           f'\n|  as of {datetime.utcnow()}, {bot.user.name} is operational  |'
           f'\n------------------------------------------------------------------------------')
 
 
-async def activity_loop():
+async def status_readout_loop():
     """
     Cycles through different bot activities
     """
     await bot.wait_until_ready()
     i = 0
     while not bot.is_closed():
-
-        if i > 2:
-            i = 0
-        '''
-        memb = set()
-        for guild in bot.guilds:
-            memb.update(guild.members)
-        '''
+        member_count = 0
+        for guild in bot.guilds: member_count += len(guild.members)
 
         status = [
             f'{len(bot.guilds)} servers',
-            f'{1300} members',
-            '!help | !feedback'
+            f'{member_count} members'
         ]
 
+        if i >= len(status):
+            i = 0
+
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
+
         i += 1
 
-        await asyncio.sleep(4)
+        await asyncio.sleep(5)
 
 
 @bot.event
