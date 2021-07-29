@@ -77,6 +77,6 @@ class StudentTools(commands.Cog):
 
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(*buttons)])
 
-        if button_ctx == 'Add To Queue': add_to_queue(button_ctx)
-        elif button_ctx == 'Remove From Queue': remove_from_queue(button_ctx)
-        elif button_ctx == 'My Position In Queue"': my_position_in_queue(button_ctx)
+        if button_ctx.values[0] == 'Add To Queue': await add_to_queue(button_ctx)
+        elif button_ctx.values[0] == 'Remove From Queue': await remove_from_queue(button_ctx)
+        elif button_ctx.values[0] == 'My Position In Queue"': await my_position_in_queue(button_ctx)

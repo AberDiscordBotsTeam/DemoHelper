@@ -134,8 +134,8 @@ class DemonstratorTools(commands.Cog):
 
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
-        if button_ctx == 'Next': next_student(button_ctx)
-        elif button_ctx == 'Display Queue': display_queue(button_ctx)
-        elif button_ctx == 'Clear Role': clear_role(button_ctx)
-        elif button_ctx == 'Clear Queue': clear_queue(button_ctx)
-        elif button_ctx == 'Purge Channel': purge_channel(button_ctx)
+        if button_ctx.values[0] == 'Next': await next_student(button_ctx)
+        elif button_ctx.values[0] == 'Display Queue': await display_queue(button_ctx)
+        elif button_ctx.values[0] == 'Clear Role': await clear_role(button_ctx)
+        elif button_ctx.values[0] == 'Clear Queue': await clear_queue(button_ctx)
+        elif button_ctx.values[0] == 'Purge Channel': await purge_channel(button_ctx)

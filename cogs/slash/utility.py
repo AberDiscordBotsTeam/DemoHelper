@@ -94,6 +94,6 @@ class Utility(commands.Cog):
 
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
-        if button_ctx == 'Check Roles': check_roles(ctx, button_ctx)
-        elif button_ctx == 'Clear Messages': clear_messages(ctx, button_ctx)
-        elif button_ctx == 'DemoHelper Invite Link': demo_helper_invite_ink(button_ctx)
+        if button_ctx.values[0] == 'Check Roles': await check_roles(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Clear Messages': await clear_messages(ctx, button_ctx)
+        elif button_ctx.values[0] == 'DemoHelper Invite Link': await demo_helper_invite_ink(button_ctx)
