@@ -110,4 +110,4 @@ class Utility(commands.Cog):
         elif button_ctx.values[0] == 'Feedback':
             await button_ctx.edit_origin(embed=message__info__feedback(), content='', components=[])
         elif button_ctx.values[0] == 'Invite Link':
-            await button_ctx.edit_origin(embed=message__info__feedback(), content='', components=[])
+            await button_ctx.edit_origin(embed=message__info__invite_link(), content='', components=[])
