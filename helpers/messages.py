@@ -1,7 +1,9 @@
+import os
 
 import discord
 
 # --------------------------------------------------
+from dotenv import load_dotenv
 
 EMOTE_WARNING = ":warning:"
 EMOTE_STOP = ":octagonal_sign:"
@@ -90,8 +92,10 @@ Alternatively, if you request is urgent, please contact support@samlewis.dev
 
 
 def message__info__invite_link():
+    load_dotenv()
     return message__custom__info(f"""
-https://discord.com/api/oauth2/authorize?client_id=870279603103621162&permissions=2164272128&scope=bot%20applications.commands
+__DemoHelper Invite Link__:
+{os.getenv('INVITE_URL')}
     """)
 
 

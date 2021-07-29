@@ -36,8 +36,9 @@ DISCORD_TOKEN=""
 2. Click on `New Application` in the top right.
 3. Give it a name
 4. Head to the `OAuth2` menu
-5. Select `bot` and `applications.commands` from `SCOPES`
-6. Select `Send Messages` and `View Channels` from `BOT PERMISSIONS`
+5. Check the boxes shown below:
+  ![assets/oauth2_url_generator_screenshot.png](assets/oauth2_url_generator_screenshot.png)
+6. Copy the generated URL into the `.env` file as the value for the key `INVITE_URL`
 7. Head to the `Bot` menu
 8. Click `Add Bot`
 9. Click `Yes, do it!`
