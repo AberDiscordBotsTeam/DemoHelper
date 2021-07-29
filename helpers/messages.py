@@ -55,7 +55,7 @@ def message__warning__user_invalid_permissions():
 
 
 def message__info__about():
-    return message__custom__warning(f"""
+    return message__custom__info(f"""
 __**Demo Helper**__
 DemoHelper is a queue system for online practical where students can add themselves to the
 queue using `!add`.
@@ -71,7 +71,7 @@ https://github.com/AberDiscordBotsTeam/demoHelperBot
 
 
 def message__info__feedback():
-    return message__custom__warning(f"""
+    return message__custom__info(f"""
 If the bot is non-functional or you have feedback you would like to submit.
 Then please join https://discord.gg/b3EdxVK and send a message in the <#740966780079571105> or <#740967688876327012> channels'
 
