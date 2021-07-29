@@ -14,9 +14,9 @@ from dotenv import load_dotenv
 from cogs.slash.demonstrator_tools import DemonstratorTools
 from cogs.slash.student_tools import StudentTools
 from cogs.slash.utility import Utility
-from helpers.messages import message__custom__error__check_failure, message__custom__error__missing_required_argument, \
-    message__custom__error__command_not_found, message__custom__error__bad_argument, \
-    message__custom__error__rate_limited, message__custom__error__unknown_error
+from helpers.messages.errors import message__custom__error__check_failure, \
+    message__custom__error__missing_required_argument, message__custom__error__command_not_found, \
+    message__custom__error__bad_argument, message__custom__error__rate_limited, message__custom__error__unknown_error
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
