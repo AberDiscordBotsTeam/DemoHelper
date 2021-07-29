@@ -91,7 +91,7 @@ Alternatively, if you request is urgent, please contact support@samlewis.dev
 
 def message__info__invite_link():
     return message__custom__info(f"""
-https://discord.com/api/oauth2/authorize?client_id=870279603103621162&permissions=2147494912&scope=bot%20applications.commands
+https://discord.com/api/oauth2/authorize?client_id=870279603103621162&permissions=2164272128&scope=bot%20applications.commands
     """)
 
 
