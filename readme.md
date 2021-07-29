@@ -1,56 +1,121 @@
-# DemoHelper bot
-[![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/PzqhkafaUV)  
-stores a queue of people waiting for demonstrators to help them with their work or sign-off
+# DemoHelper v2
+[![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/PzqhkafaUV)
 
+# 1. Contents
+- 1\. Contents
+- 2\. About
+  - 2.1 Warnings
+- 3\. Requirements
+  - 3.1. `.env` file
+- 4\. Installing DemoHelper on Your Hosting Server
+  - 4.1 Prerequisites
+  - 4.2 By Operating System
+    - 4.2.1 Debian
+  - 4.3 Running as a Service
+    - 4.3.1 PM2
+    - 4.3.2 Systemd
+- 5\. Maintenance
+
+# 2. About
+DemoHelper stores a queue of students waiting for demonstrators to aid them with their work.
+## 2.1 Warnings
 **Please note:**  The user requires one of the following roles with the same name to have full access to all 
 the bots commands: Demonstrator, demonstrator, DEMONSTRATOR, Admin role, ADMIN ROLE, Admin, Devs
 
-**Aber Verify Bot integration** Once you've added the `Aber Verify Bot` and configured the server channels you will need to manually assign `DemoHelper` the role of verified from the `#verify-newcomers` channel to allow it to see any other channels 
-
-## Install and use locally
-1. Check python3, pip and pipenv are installed
-2. Navigate to a terminal and `git clone  <repository url>` and cd into its directory
-3. `pipenv install` to install dependencies
-4. Navigate to the discord developers site, create a new application, go to the bot tab, add a bot and then copy the token from that tab
-5. create a .env file with the token from the previous step using the format `DISCORD_TOKEN=<yourtoken-here>`.
-**Optional** add the line `CMD_PREFIX=<custom-prefix>` to change from the default prefix of `!`
-6. `pipenv run python3 -m demobot` to run the server
-7. Navigate to the 0Auth2 tab and select bot from the scopes section, then scroll down and select the bot permissions: View channels and Send Messages. Copy the link from the scopes section and paste it into your web browser and select the servers you want to add the bot to
-  
-## Setting up as a service
-1. Complete the steps from above apart from 6 and 7
-2. create a file in `/etc/systemd/system/` called `demoBot.service` and add the following to the file:
+# 3. Requirements
+## 3.1 `.env` file
+This file stores secrets such as the Discord Token.
+A template can be seen below:
 ```
-[Unit]
-Description=demoBot
-After=network.target
-StartLimitIntervalSec=0
-
-[Service]
-Type=simple
-Restart=always
-RestartSec=1
-User=<username>
-WorkingDirectory=/home/<username>/demoHelperBot
-ExecStart=/usr/bin/pipenv run python3 -m demobot
-
-[Install]
-WantedBy=multi-user.target
+DISCORD_TOKEN=""
 ```
-3. Once completed use the command `sudo systemctl daemon-reload` to reload the file
 
-## The following commands are now used to manage the bot:
-1. `sudo systemctl start demoBot` - start the service
-2. `sudo systemctl status demoBot` - get the status of the service
-3. `sudo systemctl stop demoBot` - stop the service
-4. `systemctl restart demoBot` - restart the service
-5. `sudo systemctl enable demoBot/sudo systemctl disable demoBot` - enable/disable the service on boot of server.
-6. `journalctl -ru demobot.service` - view recent logs
+# 4. Installing DemoHelper on Your Hosting Server
+## 4.1 Prerequisites
+1. Head to https://discord.com/developers/applications.
+2. Click on `New Application` in the top right.
+3. Give it a name
+4. Head to the `OAuth2` menu
+5. Select `bot` and `applications.commands` from `SCOPES`
+6. Select `Send Messages` and `View Channels` from `BOT PERMISSIONS`
+7. Head to the `Bot` menu
+8. Click `Add Bot`
+9. Click `Yes, do it!`
+10. Click `Copy` under `Click to Reveal Token` and paste the contents into the `.env` file as the value for the key `DISCORD_TOKEN`
+11. Tick `PRESENCE INTENT` and `SERVER MEMBERS INTENT` under `Privileged Gateway Intents`
 
-## General maintenance
-1. `pipenv update` to update dependencies
-2. `git pull` to pull updates from the repository
-3. `systemctl restart demoBot` to restart the service
+## 4.2 By Operating System
+### 4.2.1 Debian
+1. `sudo apt update`
+2. `sudo apt install -y git python3 python3-pip python3-dotenv`
+3. `git clone https://github.com/Amheus/DemoHelper`
+4. `pipenv install`
 
-## Preview of bot working
-![help](https://raw.githubusercontent.com/IdrisTheDragon/demoHelperBot/master/help_2.png)
+## 4.3 Running as a Service
+There are many ways you can run a Discord Bot as a service, a few are documented below:
+### 4.3.1 PM2
+1. `sudo apt update && sudo apt install -y npm`
+2. `sudo npm install pm2@latest -g`
+3. `cd ~/DemoHelper`
+4. `pm2 start main.py --name DemoHelper --interpreter python3`
+5. `pm2 save`
+6. `pm2 startup`
+
+After a sever reboot, run `pm2 resurrect` to bring back all processed present when you ran `pm2 save`
+
+The following commands are used to manage a PM2 process:
+- General
+  - *For the following commands, replace `<pm2-id>` with the ID value for the process found in `pm2 list`.*
+  - `pm2 start <pm2-id>`
+  - `pm2 restart <pm2-id>`
+  - `pm2 stop <pm2-id>`
+- Monitoring
+  - `pm2 list` Returns a list of all processes that PM2 manages.
+  - `pm2 monit` - Similar to `pm2 list` but is more comprehensive.
+  - `pm2 status <pm2-id>`
+- System Startup
+  - `pm2 save`
+  - `pm2 startup`
+  - `pm2 resurrect`
+
+### 4.3.2 Systemd
+1. Create the following file in `/etc/systemd/system/DemoHelper.service`
+    ```
+    [Unit]
+    Description=DemoHelper
+    After=network.target
+    StartLimitIntervalSec=0
+
+    [Service]
+    Type=simple
+    Restart=always
+    RestartSec=1
+    User=<username>
+    WorkingDirectory=/home/<username>/DemoHelper
+    ExecStart=/usr/bin/pipenv run python3 -m DemoHelper
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+2. `sudo systemctl daemon-reload`
+3. `sudo systemctl start DemoHelper`
+
+If you want DemoHelper to run on system startup, then please run `sudo systemctl enable DemoHelper`
+
+The following commands are used to manage a Systemd process:
+- General
+  - `sudo systemctl start`
+  - `sudo systemctl restart`
+  - `sudo systemctl stop`
+- Monitoring and Status
+  - `sudo systemctl status`
+  - `journalctl -ru demobot.service` - Returns recent logs.
+- System Startup
+  - `sudo systemctl enable` - Makes the service start on system startup.
+  - `sudo systemctl disable` - Stops the service from starting on system startup.
+
+
+### 5. Maintenance
+1. Update dependencies using `pipenv update`
+2. Pull updates from the repository using `git pull`
+3. Then restart the service.
