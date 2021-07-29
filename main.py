@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 
 # logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
 from cogs.slash.demonstrator_tools import DemonstratorTools
-from cogs.slash.general import General
 from cogs.slash.student_tools import StudentTools
 from cogs.slash.utility import Utility
 from helpers.messages import message__custom__error__check_failure, message__custom__error__missing_required_argument, \
@@ -96,6 +95,5 @@ async def on_command_error(ctx, error):
 if __name__ == '__main__':
     bot.add_cog(DemonstratorTools(bot))
     bot.add_cog(StudentTools(bot))
-    bot.add_cog(General(bot))
     bot.add_cog(Utility(bot))
     bot.run(os.getenv('DISCORD_TOKEN'))
