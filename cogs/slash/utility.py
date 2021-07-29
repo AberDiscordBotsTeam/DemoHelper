@@ -6,7 +6,7 @@ from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
 
-from helpers.messages import message__warning__user_invalid_permissions
+from helpers.messages import message__warning__user_invalid_permissions, message__info__about, message__info__feedback
 
 
 async def check_roles(ctx, button_ctx):
@@ -48,6 +48,8 @@ async def clear_messages(ctx, button_ctx):
     action_row = create_actionrow(*buttons)
     await button_ctx.edit_origin(content="Please confirm whether you want to clear messages?", components=[action_row])
 
+    button_ctx: ComponentContext = await wait_for_component(ctx.bot, components=[action_row])
+
     if button_ctx.custom_id == 'yes':
         counter = await ctx.channel.purge()
         await button_ctx.edit_origin(
@@ -61,9 +63,10 @@ async def clear_messages(ctx, button_ctx):
         )
 
 
-async def demo_helper_invite_ink(button_ctx):
+async def ping_test(ctx, button_ctx):
+    message_content = f'pong. `DWSP latency: {str(round(ctx.bot.latency * 1000))}ms`'
     await button_ctx.edit_origin(
-        content=f'https://discord.com/oauth2/authorize?client_id=870279603103621162&permissions=3072&scope=bot%20applications.commands',
+        content=message_content,
         components=[]
     )
 
@@ -77,23 +80,34 @@ class Utility(commands.Cog):
         description="A collection of utility actions for Demo Helper"
     )
     async def command__slash__utility__about(self, ctx: SlashContext):
-        if not ctx.author.guild_permissions.administrator:
-            await ctx.send(embed=message__warning__user_invalid_permissions(), hidden=True)
-            return
         select = create_select(
             options=[
-                create_select_option("Check Roles", value="Check Roles", emoji="👩"),
-                create_select_option("Clear Messages", value="Clear Messages", emoji="✉"),
-                create_select_option("DemoHelper Invite Link", value="DemoHelper Invite Link", emoji="🌐")
+                create_select_option('Check Roles', value='Check Roles', emoji='👩'),
+                create_select_option('Clear Messages', value='Clear Messages', emoji='✉'),
+
+                create_select_option('Ping', value='Ping', emoji='🏓'),
+                create_select_option('About', value='About', emoji='ℹ'),
+                create_select_option('Feedback', value='Feedback', emoji='📣'),
+                create_select_option('Invite Link', value='Invite Link', emoji='🌐')
             ],
             placeholder="Utility selection",
             min_values=1,
             max_values=1
         )
-        await ctx.send("Please select a utility.", components=[create_actionrow(select)], hidden=True)
+        await ctx.send(content="Please select a utility.", components=[create_actionrow(select)], hidden=True)
 
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
-        if button_ctx.values[0] == 'Check Roles': await check_roles(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Clear Messages': await clear_messages(ctx, button_ctx)
-        elif button_ctx.values[0] == 'DemoHelper Invite Link': await demo_helper_invite_ink(button_ctx)
+        if button_ctx.values[0] == 'Check Roles':
+            await check_roles(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Clear Messages':
+            await clear_messages(ctx, button_ctx)
+
+        elif button_ctx.values[0] == 'Ping':
+            await ping_test(ctx, button_ctx)
+        elif button_ctx.values[0] == 'About':
+            await button_ctx.edit_origin(embed=message__info__about(), content='', components=[])
+        elif button_ctx.values[0] == 'Feedback':
+            await button_ctx.edit_origin(embed=message__info__feedback(), content='', components=[])
+        elif button_ctx.values[0] == 'Invite Link':
+            await button_ctx.edit_origin(embed=message__info__feedback(), content='', components=[])
