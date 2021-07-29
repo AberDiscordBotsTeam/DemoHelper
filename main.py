@@ -16,12 +16,10 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
 
-
 # load the private discord token from .env file.
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('CMD_PREFIX')
-
 
 # Initialise the Bot object with an accessible help Command object
 helpCommand = DefaultHelpCommand()
@@ -73,12 +71,17 @@ async def activity_loop():
             memb.update(guild.members)
         '''
 
-        status = [f'{len(bot.guilds)} servers', f'{1300} members', '!help | !feedback']
+        status = [
+            f'{len(bot.guilds)} servers',
+            f'{1300} members',
+            '!help | !feedback'
+        ]
 
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
         i += 1
 
         await asyncio.sleep(4)
+
 
 @bot.event
 async def on_command_error(ctx, error):

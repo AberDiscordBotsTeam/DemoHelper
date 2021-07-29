@@ -5,8 +5,9 @@ import shelve
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from cogs import adminRoles, addMessageFile
-from demobot import logger as logging
+from cogs import admin_roles, add_message_file
+from main import logger as logging
+
 
 def setup(bot):
     """
@@ -21,15 +22,15 @@ class Utilities(commands.Cog):
     """
 
     @commands.command()
-    @commands.has_any_role(*adminRoles)
+    @commands.has_any_role(*admin_roles)
     @commands.bot_has_permissions(manage_messages=True, manage_roles=True)
-    async def checkRoles(self, ctx: Context):
+    async def check_roles(self, ctx: Context):
         # check server wide perms
         perms = None
-        for r in ctx.me.roles:
-            print(r, ctx.me.name)
-            if r.name[0:4] == 'Demo': # need better way to do this crap.
-                perms = r.permissions
+        for role in ctx.me.roles:
+            print(role, ctx.me.name)
+            if role.name[0:4] == 'Demo':  # need better way to do this crap.
+                perms = role.permissions
                 break
         # doesn't work.. perms = ctx.guild.permissions_for(ctx.me)
         if perms and not perms.move_members:
@@ -50,9 +51,9 @@ class Utilities(commands.Cog):
                 """)
 
     @commands.command(aliases=['cm'])
-    @commands.has_any_role(*adminRoles)
+    @commands.has_any_role(*admin_roles)
     @commands.bot_has_permissions(manage_messages=True)
-    async def clearMessages(self, ctx: Context):
+    async def clear_messages(self, ctx: Context):
         """
         *Warning* Clears all messages in a channel
         that are less than 14 days old
@@ -67,9 +68,11 @@ class Utilities(commands.Cog):
         reaction, _ = await ctx.bot.wait_for('reaction_add', check=check)
 
         if str(reaction.emoji) == '👍':
-            logging.info('{0}: #{1} messages cleared by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
+            logging.info(f'{ctx.guild}: #{ctx.channel.name} messages cleared by {ctx.message.author}')
             counter = await ctx.channel.purge()
-            msg = await ctx.channel.send(f'Success! Messages deleted: `{len(counter)}`, this message will delete in 5 seconds')
+            msg = await ctx.channel.send(
+                f'Success! Messages deleted: `{len(counter)}`, this message will delete in 5 seconds'
+            )
             await asyncio.sleep(5)
             await msg.delete()
         elif str(reaction.emoji) == '👎':
@@ -77,28 +80,30 @@ class Utilities(commands.Cog):
             await ctx.send('Messages have not been cleared')
 
     @commands.command()
-    @commands.has_any_role(*adminRoles)
-    async def setAddMessage(self, ctx: Context, *, message: str):
+    @commands.has_any_role(*admin_roles)
+    async def set_add_message(self, ctx: Context, *, message: str):
         """
         Change the default add message
         :param message: The new add message to set.
         """
-        logging.info('{0}: #{1} setAddMessage to "{2}" by {3}'.format(ctx.guild, ctx.channel.name, message, ctx.message.author))
-        with shelve.open(addMessageFile) as db:
+        logging.info(
+            f'{ctx.guild}: #{ctx.channel.name} setAddMessage to "{message}" by {ctx.message.author}'
+        )
+        with shelve.open(add_message_file) as db:
             db[str(ctx.guild)] = message
-        await ctx.send('Anyone added to queue will see this msg:\n' + message)
+        await ctx.send(f'Anyone added to queue will see this msg:\n{message}')
 
     @commands.command()
-    @commands.has_any_role(*adminRoles)
-    async def resetAddMessage(self, ctx: Context):
+    @commands.has_any_role(*admin_roles)
+    async def reset_add_message(self, ctx: Context):
         """
         Resets the custom add message
         """
-        logging.info('{0}: #{1} resteAddMessage by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
-        serverName = ctx.guild
-        with shelve.open(addMessageFile) as db:
-            if str(serverName) in db:
-                db.pop(str(serverName))
+        logging.info(f'{ctx.guild}: #{ctx.channel.name} resteAddMessage by {ctx.message.author}')
+        server_name = ctx.guild
+        with shelve.open(add_message_file) as db:
+            if str(server_name) in db:
+                db.pop(str(server_name))
                 return await ctx.send('Custom add message has been reset')
 
     @commands.command()
@@ -108,14 +113,14 @@ class Utilities(commands.Cog):
         """
         import time
         start_time = time.time()
-        message = await ctx.send('pong. `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms`')
+        message = await ctx.send(f'pong. `DWSP latency: {str(round(ctx.bot.latency * 1000))}ms`')
         end_time = time.time()
-        await message.edit(content='🏓 pong `DWSP latency: ' + str(round(ctx.bot.latency * 1000)) + 'ms` ' +
-                                   '`Response time: ' + str(int((end_time - start_time) * 1000)) + 'ms`')
-        logging.info('{0}: #{1} ping by {2}'.format(ctx.guild, ctx.channel.name, ctx.message.author))
-        
+        await message.edit(content=f'🏓 pong `DWSP latency: {str(round(ctx.bot.latency * 1000))}ms` ' +
+                                   f'`Response time: {str(int((end_time - start_time) * 1000))}ms`')
+        logging.info(f'{ctx.guild}: #{ctx.channel.name} ping by {ctx.message.author}')
+
     @commands.command()
-    async def getBotLink(self, ctx: Context):
+    async def get_bot_link(self, ctx: Context):
         """
         Returns the link to invite this bot to your server
         """
