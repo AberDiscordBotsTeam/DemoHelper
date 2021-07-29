@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import DefaultHelpCommand
 from discord_slash import SlashCommand
 from dotenv import load_dotenv
@@ -42,35 +42,38 @@ async def on_ready():
     """
     Do something when the bot is ready to use.
     """
-    bot.loop.create_task(status_readout_loop())
+    status_readout_loop.start()
     print(f'------------------------------------------------------------------------------'
           f'\n|  as of {datetime.utcnow()}, {bot.user.name} is operational  |'
           f'\n------------------------------------------------------------------------------')
 
+current_status_index = 0
 
+
+@tasks.loop(seconds=5)
 async def status_readout_loop():
-    """
-    Cycles through different bot activities
-    """
+    global current_status_index
     await bot.wait_until_ready()
-    i = 0
-    while not bot.is_closed():
-        member_count = 0
-        for guild in bot.guilds: member_count += len(guild.members)
+    if bot.is_closed(): return
 
-        status = [
-            f'{len(bot.guilds)} servers',
-            f'{member_count} members'
-        ]
+    member_count = 0
+    for guild in bot.guilds: member_count += len(guild.members)
 
-        if i >= len(status):
-            i = 0
+    status = [
+        f'{len(bot.guilds)} servers',
+        f'{member_count} members'
+    ]
 
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=status[i]))
+    if current_status_index >= len(status):
+        current_status_index = 0
 
-        i += 1
+    await bot.change_presence(
+        activity=discord.Activity(
+            type=discord.ActivityType.watching, name=status[current_status_index]
+        )
+    )
 
-        await asyncio.sleep(5)
+    current_status_index += 1
 
 
 @bot.event
