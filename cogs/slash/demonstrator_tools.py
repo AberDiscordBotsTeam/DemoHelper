@@ -1,14 +1,9 @@
-
-import discord
-from discord import Member
 from discord.ext import commands
-from discord.ext.commands import bot
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
 
 from helpers.management import pull_to_voice, assign_role, update_member
-from helpers.messages import message__warning__user_invalid_permissions
 from helpers.queue_management import get_queue
 
 

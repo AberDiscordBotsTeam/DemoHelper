@@ -1,13 +1,9 @@
-
-import discord
 from discord.ext import commands
-from discord.ext.commands import bot
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
 
-from helpers.messages import message__warning__user_invalid_permissions, message__info__about, message__info__feedback, \
-    message__info__invite_link
+from helpers.messages.about import message__info__about, message__info__feedback, message__info__invite_link
 
 
 async def check_roles(ctx, button_ctx):
