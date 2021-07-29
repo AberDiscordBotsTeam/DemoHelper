@@ -15,6 +15,9 @@ from cogs.slash.demonstrator_tools import DemonstratorTools
 from cogs.slash.general import General
 from cogs.slash.student_tools import StudentTools
 from cogs.slash.utility import Utility
+from helpers.messages import message__custom__error__check_failure, message__custom__error__missing_required_argument, \
+    message__custom__error__command_not_found, message__custom__error__bad_argument, \
+    message__custom__error__rate_limited, message__custom__error__unknown_error
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
@@ -76,24 +79,18 @@ async def activity_loop():
 
 @bot.event
 async def on_command_error(ctx, error):
-    """
-    Handle the Error message in a nice way.
-    """
     if isinstance(error, commands.errors.CheckFailure):
-        await ctx.send(error)
+        await ctx.send(embed=message__custom__error__check_failure(error))
     elif isinstance(error, commands.errors.MissingRequiredArgument):
-        await ctx.send('You are missing a required argument.')
+        await ctx.send(embed=message__custom__error__missing_required_argument())
     elif isinstance(error, commands.errors.CommandNotFound):
-        pass
+        await ctx.send(embed=message__custom__error__command_not_found())
     elif isinstance(error, commands.errors.BadArgument):
-        await ctx.send('Please input a users @username instead. e.g. !clearRole @Joel Adams')
-        ''' # TODO: implement rate limiting
-    elif client.is_ws_ratelimited():
-        await ctx.send("The bot is currently being rate limited due to high traffic, please wait a few seconds and try again")
-        '''
+        await ctx.send(embed=message__custom__error__bad_argument())
+    elif bot.is_ws_ratelimited():
+        await ctx.send(embed=message__custom__error__rate_limited())
     else:
-        await ctx.send('Something went wrong, please contact an Admin.')
-        logging.error(error)
+        await ctx.send(embed=message__custom__error__unknown_error())
 
 
 if __name__ == '__main__':

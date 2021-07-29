@@ -24,6 +24,16 @@ def message__custom__error(message):
     )
 
 
+def message__custom__stop(message):
+    return discord.Embed(
+        title=f"{EMOTE_NO} ERROR",
+        description=f"""
+        {message}
+        """,
+        colour=discord.Colour.red()
+    )
+
+
 def message__custom__warning(message):
     return discord.Embed(
         title=f"{EMOTE_WARNING} WARNING",
@@ -48,7 +58,7 @@ def message__custom__info(message):
 
 
 def message__warning__user_invalid_permissions():
-    return message__custom__warning(f"""
+    return message__custom__stop(f"""
     This action requires administrative privileges.
     Please contact your server administrator.
     """)
@@ -76,4 +86,44 @@ If the bot is non-functional or you have feedback you would like to submit.
 Then please join https://discord.gg/b3EdxVK and send a message in the <#740966780079571105> or <#740967688876327012> channels'
 
 Alternatively, if you request is urgent, please contact support@samlewis.dev
+    """)
+
+
+# --------------------------------------------------
+
+
+def message__custom__error__check_failure(error):
+    return message__custom__error(f"""
+{error}
+    """)
+
+
+def message__custom__error__missing_required_argument():
+    return message__custom__error(f"""
+You are missing a required argument.
+    """)
+
+
+def message__custom__error__command_not_found():
+    return message__custom__error(f"""
+You are missing a required argument.
+    """)
+
+
+def message__custom__error__bad_argument():
+    return message__custom__error(f"""
+Bad argument.
+    """)
+
+
+def message__custom__error__rate_limited():
+    return message__custom__warning(f"""
+DemoHelper is currently being rate limited by Discord due to high traffic.
+    """)
+
+
+def message__custom__error__unknown_error():
+    return message__custom__error(f"""
+An unknown error occured.
+Please contact support@samlewis.dev ASAP with details and screenshots of this incident.
     """)
