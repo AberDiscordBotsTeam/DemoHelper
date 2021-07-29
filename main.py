@@ -2,12 +2,13 @@ import asyncio
 import os
 
 import logging
+from datetime import datetime
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import DefaultHelpCommand
 from dotenv import load_dotenv
-from cogs.general import General
+from cogs_old.general import General
 
 # logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
 logger = logging.getLogger('discord')
@@ -18,20 +19,12 @@ logger.addHandler(handler)
 
 # load the private discord token from .env file.
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
-PREFIX = os.getenv('CMD_PREFIX')
 
 # Initialise the Bot object with an accessible help Command object
 helpCommand = DefaultHelpCommand()
 
-# check if prefix set in the .env otherwise use default.
-# changing the prefix changes the way the bot is called. e.g. '$' = $add or '!' = !add
-prefix = PREFIX
-if not prefix:
-    prefix = '!'
-
 bot = commands.Bot(
-    command_prefix=prefix,
+    command_prefix='dh~',
     help_command=helpCommand,
     intents=discord.Intents.all()
 )
@@ -41,9 +34,9 @@ generalCog = General()
 bot.add_cog(generalCog)
 helpCommand.cog = generalCog
 
-# load other cogs
-bot.load_extension("cogs.demoHelper")
-bot.load_extension("cogs.utilities")
+# load other cogs_old
+bot.load_extension("cogs_old.demo_helper")
+bot.load_extension("cogs_old.utilities")
 
 
 @bot.event
@@ -51,8 +44,10 @@ async def on_ready():
     """
     Do something when the bot is ready to use.
     """
-    print(f'{bot.user.name} has connected to Discord!')
     bot.loop.create_task(activity_loop())
+    print(f'------------------------------------------------------------------------------'
+          f'\n|  as of {datetime.utcnow()}, {bot.user.name} is operational  |'
+          f'\n------------------------------------------------------------------------------')
 
 
 async def activity_loop():
@@ -105,5 +100,5 @@ async def on_command_error(ctx, error):
         logging.error(error)
 
 
-# Start the bot
-bot.run(TOKEN)
+if __name__ == '__main__':
+    bot.run(os.getenv('DISCORD_TOKEN'))
