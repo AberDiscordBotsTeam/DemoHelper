@@ -7,6 +7,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 from discord.ext.commands import DefaultHelpCommand
+from discord_slash import SlashCommand
 from dotenv import load_dotenv
 
 # logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
@@ -29,9 +30,9 @@ helpCommand = DefaultHelpCommand()
 
 bot = commands.Bot(
     command_prefix='dh~',
-    help_command=helpCommand,
     intents=discord.Intents.all()
 )
+slash = SlashCommand(bot, sync_commands=True)
 
 
 @bot.event
