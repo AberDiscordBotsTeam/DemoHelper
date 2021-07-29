@@ -9,7 +9,7 @@ from discord_slash.utils.manage_components import create_select_option, create_s
 from helpers.queue_management import get_queue
 
 
-def add_to_queue(ctx):
+async def add_to_queue(ctx):
     queue = get_queue(ctx.guild)
     user = ctx.message.author
 
@@ -26,7 +26,7 @@ def add_to_queue(ctx):
         )
 
 
-def remove_from_queue(ctx):
+async def remove_from_queue(ctx):
     queue = get_queue(ctx.guild)
     user = ctx.message.author
 
@@ -43,7 +43,7 @@ def remove_from_queue(ctx):
         )
 
 
-def my_position_in_queue(ctx):
+async def my_position_in_queue(ctx):
     queue = get_queue(ctx.guild)
     user = ctx.message.author
 

@@ -9,7 +9,7 @@ from discord_slash.utils.manage_components import create_select_option, create_s
 from helpers.messages import message__warning__user_invalid_permissions
 
 
-def check_roles(ctx, button_ctx):
+async def check_roles(ctx, button_ctx):
     perms = None
     for role in ctx.me.roles:
         print(role, ctx.me.name)
@@ -40,7 +40,7 @@ def check_roles(ctx, button_ctx):
         )
 
 
-def clear_messages(ctx, button_ctx):
+async def clear_messages(ctx, button_ctx):
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
         create_button(style=ButtonStyle.red, label="no", custom_id="no")
@@ -61,7 +61,7 @@ def clear_messages(ctx, button_ctx):
         )
 
 
-def demo_helper_invite_ink(button_ctx):
+async def demo_helper_invite_ink(button_ctx):
     await button_ctx.edit_origin(
         content=f'https://discord.com/oauth2/authorize?client_id=870279603103621162&permissions=3072&scope=bot%20applications.commands',
         components=[]

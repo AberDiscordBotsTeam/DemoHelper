@@ -7,12 +7,12 @@ from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
 
-from helpers.management import pull_to_voice, assign_role
+from helpers.management import pull_to_voice, assign_role, update_member
 from helpers.messages import message__warning__user_invalid_permissions
 from helpers.queue_management import get_queue
 
 
-def next_student(ctx):
+async def next_student(ctx):
     queue = get_queue(ctx.guild)
 
     if len(queue) == 0:
@@ -46,7 +46,7 @@ def next_student(ctx):
     )
 
 
-def display_queue(ctx):
+async def display_queue(ctx):
     queue = get_queue(ctx.guild)
 
     if queue is None or len(queue) == 0:
@@ -65,7 +65,7 @@ def display_queue(ctx):
         )
 
 
-def clear_queue(ctx):
+async def clear_queue(ctx):
     (get_queue(ctx.guild)).clear()
     await ctx.edit_origin(
         content=f'The queue has been cleared.',
@@ -73,7 +73,7 @@ def clear_queue(ctx):
     )
 
 
-def clear_role(ctx):
+async def clear_role(ctx):
     for role in ctx.guild.roles:
         if role.name == ctx.channel.name:
             roles = ctx.author.roles
@@ -85,7 +85,7 @@ def clear_role(ctx):
     )
 
 
-def purge_channel(ctx):
+async def purge_channel(ctx):
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
         create_button(style=ButtonStyle.red, label="no", custom_id="no")

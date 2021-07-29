@@ -8,9 +8,13 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import DefaultHelpCommand
 from dotenv import load_dotenv
-from cogs_old.general import General
 
 # logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
+from cogs.slash.demonstrator_tools import DemonstratorTools
+from cogs.slash.general import General
+from cogs.slash.student_tools import StudentTools
+from cogs.slash.utility import Utility
+
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -28,15 +32,6 @@ bot = commands.Bot(
     help_command=helpCommand,
     intents=discord.Intents.all()
 )
-
-# Setup the General cog with the help command
-generalCog = General()
-bot.add_cog(generalCog)
-helpCommand.cog = generalCog
-
-# load other cogs_old
-bot.load_extension("cogs_old.demo_helper")
-bot.load_extension("cogs_old.utilities")
 
 
 @bot.event
@@ -101,4 +96,8 @@ async def on_command_error(ctx, error):
 
 
 if __name__ == '__main__':
+    bot.add_cog(DemonstratorTools(bot))
+    bot.add_cog(StudentTools(bot))
+    bot.add_cog(General(bot))
+    bot.add_cog(Utility(bot))
     bot.run(os.getenv('DISCORD_TOKEN'))

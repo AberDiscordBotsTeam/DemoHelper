@@ -9,7 +9,7 @@ from discord_slash.utils.manage_components import create_select_option, create_s
 from helpers.messages import message__info__about, message__info__feedback
 
 
-class Utility(commands.Cog):
+class General(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
