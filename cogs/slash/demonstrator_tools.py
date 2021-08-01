@@ -134,3 +134,31 @@ class DemonstratorTools(commands.Cog):
         elif button_ctx.values[0] == 'Clear Role': await clear_role(ctx, button_ctx)
         elif button_ctx.values[0] == 'Clear Queue': await clear_queue(ctx, button_ctx)
         elif button_ctx.values[0] == 'Purge Channel': await purge_channel(ctx, button_ctx)
+
+    @cog_ext.cog_slash(
+        name='next',
+        description='Gets next student in the queue'
+    )
+    async def command__slash__demonstrator_tools_next(self, ctx: SlashContext):
+        queue = get_queue(ctx.guild.id)
+
+        if len(queue) == 0:
+            await ctx.send(content=f'The queue is empty.')
+            return
+
+        next_student = queue.pop(0)
+
+        if next_student is None:
+            await ctx.send(content=f'There are no more students in the queue.',)
+            return
+
+        next_student = update_member(ctx, next_student)
+        message = f'The next student in the queue is {next_student.mention}, '
+        if await pull_to_voice(ctx, next_student):
+            message = message + 'They have been moved to your help voice channel. '
+        if await assign_role(ctx, next_student):
+            message = message + 'They have been assigned the role to view this channel. '
+        if message[-2:-1] == ',':
+            message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
+
+        await ctx.send(content=message)
