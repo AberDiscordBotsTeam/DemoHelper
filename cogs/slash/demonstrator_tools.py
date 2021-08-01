@@ -4,6 +4,7 @@ from discord_slash.utils.manage_components import create_select_option, create_s
     wait_for_component, create_button
 
 from helpers.management import pull_to_voice, assign_role, update_member
+from helpers.permission_management import is_authorised_demonstrator
 from helpers.queue_management import get_queue
 
 
@@ -110,6 +111,8 @@ class DemonstratorTools(commands.Cog):
         description="A collection of tools for demonstrators."
     )
     async def command__slash__demonstrator_tools(self, ctx: SlashContext):
+        if await is_authorised_demonstrator(ctx, 'NEW') is False: return
+
         select = create_select(
             options=[
                 create_select_option('Next', value='Next', emoji="👩"),
@@ -140,6 +143,8 @@ class DemonstratorTools(commands.Cog):
         description='Gets next student in the queue'
     )
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext):
+        if await is_authorised_demonstrator(ctx, 'NEW') is False: return
+
         queue = get_queue(ctx.guild.id)
 
         if len(queue) == 0:

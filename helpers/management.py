@@ -2,19 +2,6 @@
 from discord import Member, ChannelType, Permissions
 from discord.ext.commands import Context
 
-admin_roles = [
-    'Demonstrator',
-    'demonstrator',
-    'DEMONSTRATOR',
-    'Admin role',
-    'ADMIN ROLE',
-    'Admin',
-    'Devs',
-    'lecturer',
-    'LECTURER',
-    'advisor'
-]
-
 
 add_message_file = 'addMessage.shelve'
 

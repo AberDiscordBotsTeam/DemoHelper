@@ -26,7 +26,7 @@ def message__custom__error(message):
 
 def message__custom__stop(message):
     return discord.Embed(
-        title=f"{EMOTE_NO} ERROR",
+        title=f"{EMOTE_NO} STOP",
         description=f"""
         {message}
         """,

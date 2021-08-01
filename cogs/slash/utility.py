@@ -1,12 +1,14 @@
+
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
-
 from helpers.messages.about import message__info__about, message__info__feedback, message__info__invite_link
+from helpers.permission_management import is_authorised_demonstrator
 
 
 async def check_roles(ctx, button_ctx):
+    if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
     perms = None
     for role in ctx.me.roles:
         print(role, ctx.me.name)
@@ -38,6 +40,7 @@ async def check_roles(ctx, button_ctx):
 
 
 async def clear_messages(ctx, button_ctx):
+    if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
         create_button(style=ButtonStyle.red, label="no", custom_id="no")
