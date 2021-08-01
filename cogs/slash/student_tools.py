@@ -44,7 +44,6 @@ async def remove_from_queue(ctx, button_ctx):
 
 
 async def my_position_in_queue(ctx, button_ctx):
-    queue = get_queue(ctx.guild)
     queue = get_queue(ctx.guild.id)
     user = ctx.author
 
@@ -81,3 +80,25 @@ class StudentTools(commands.Cog):
         if button_ctx.custom_id == 'Add To Queue': await add_to_queue(ctx, button_ctx)
         elif button_ctx.custom_id == 'Remove From Queue': await remove_from_queue(ctx, button_ctx)
         elif button_ctx.custom_id == 'My Position In Queue': await my_position_in_queue(ctx, button_ctx)
+
+    @cog_ext.cog_slash(
+        name='add',
+        description='Add yourself to the queue'
+    )
+    async def command__slash__student_tools_add(self, ctx: SlashContext):
+        queue = get_queue(ctx.guild.id)
+        user = ctx.author
+        queue.append(user)
+        if user not in queue: await ctx.send(content=f'You have been added to the queue.')
+        else: await ctx.send(content=f'You are already in the queue.')
+
+    @cog_ext.cog_slash(
+        name='remove',
+        description='Remove yourself from the queue'
+    )
+    async def command__slash__student_tools_remove(self, ctx: SlashContext):
+        queue = get_queue(ctx.guild.id)
+        user = ctx.author
+        queue.remove(user)
+        if user not in queue: await ctx.send(content=f'You have been removed from the queue.')
+        else: await ctx.send(content=f'You are not in the queue.')
