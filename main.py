@@ -36,36 +36,48 @@ bot = commands.Bot(
 )
 slash = SlashCommand(bot, sync_commands=True)
 
+bot_metrics = {}
+current_status_index = 0
+
 
 @bot.event
 async def on_ready():
     """
     Do something when the bot is ready to use.
     """
+    get_bot_metrics.start()
     status_readout_loop.start()
     print(f'------------------------------------------------------------------------------'
           f'\n|  as of {datetime.utcnow()}, {bot.user.name} is operational  |'
           f'\n------------------------------------------------------------------------------')
 
-current_status_index = 0
 
-
-@tasks.loop(seconds=5)
-async def status_readout_loop():
-    global current_status_index
+@tasks.loop(hours=24)
+async def get_bot_metrics():
     await bot.wait_until_ready()
     if bot.is_closed(): return
 
+    bot_metrics["guild_count"] = len(bot.guilds)
+
     member_count = 0
-    for guild in bot.guilds: member_count += len(guild.members)
+    for guild in bot.guilds:
+        member_count += len(guild.members)
+    bot_metrics["total_user_count"] = member_count
+
+
+@tasks.loop(seconds=10)
+async def status_readout_loop():
+    global current_status_index
+
+    await bot.wait_until_ready()
+    if bot.is_closed(): return
 
     status = [
-        f'{len(bot.guilds)} servers',
-        f'{member_count} members'
+        f'{bot_metrics["guild_count"]} servers',
+        f'{bot_metrics["total_user_count"]} members'
     ]
 
-    if current_status_index >= len(status):
-        current_status_index = 0
+    if current_status_index >= len(status): current_status_index = 0
 
     await bot.change_presence(
         activity=discord.Activity(
