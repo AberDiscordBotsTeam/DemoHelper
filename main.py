@@ -57,12 +57,19 @@ async def get_bot_metrics():
     await bot.wait_until_ready()
     if bot.is_closed(): return
 
-    bot_metrics["guild_count"] = len(bot.guilds)
-
+    guilds = bot.guilds
     member_count = 0
+    temp_member_set = {None}
+
     for guild in bot.guilds:
-        member_count += len(guild.members)
+        members = guild.members
+        member_count += len(members)
+        for member in members:
+            temp_member_set.add(member.name)
+
+    bot_metrics["guild_count"] = len(guilds)
     bot_metrics["total_user_count"] = member_count
+    bot_metrics["unique_user_count"] = len(temp_member_set)
 
 
 @tasks.loop(seconds=10)
@@ -74,7 +81,8 @@ async def status_readout_loop():
 
     status = [
         f'{bot_metrics["guild_count"]} servers',
-        f'{bot_metrics["total_user_count"]} members'
+        f'{bot_metrics["total_user_count"]} members',
+        f'{bot_metrics["unique_user_count"]} unique members'
     ]
 
     if current_status_index >= len(status): current_status_index = 0
