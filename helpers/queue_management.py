@@ -3,15 +3,15 @@
 _QUEUE = {'dummy': []}
 
 
-def get_queue(server_name: str):
+def get_queue(guild_snowflake: str):
     """
     Get the relevant queue for the server
 
-    :param server_name: the server you want the queue for
+    :param guild_snowflake: the server you want the queue for
     :return: The queue for the server
     """
-    if server_name in _QUEUE.keys():
-        return _QUEUE.get(server_name)
+    if guild_snowflake in _QUEUE.keys():
+        return _QUEUE.get(guild_snowflake)
     else:
-        _QUEUE[server_name] = []
-        return _QUEUE.get(server_name)
+        _QUEUE[guild_snowflake] = []
+        return _QUEUE.get(guild_snowflake)

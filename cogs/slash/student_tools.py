@@ -45,6 +45,7 @@ async def remove_from_queue(ctx, button_ctx):
 
 async def my_position_in_queue(ctx, button_ctx):
     queue = get_queue(ctx.guild)
+    queue = get_queue(ctx.guild.id)
     user = ctx.author
 
     if user in queue:
