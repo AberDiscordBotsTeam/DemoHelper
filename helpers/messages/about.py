@@ -1,9 +1,12 @@
 
+
+import newrelic.agent
 import os
 from dotenv import load_dotenv
 from helpers.messages._core import message__custom__info
 
 
+@newrelic.agent.background_task(name='helpers.messages.about.message__info__about', group='Task')
 def message__info__about():
     return message__custom__info(f"""
 __**Demo Helper**__
@@ -20,6 +23,7 @@ https://github.com/AberDiscordBotsTeam/demoHelperBot
     """)
 
 
+@newrelic.agent.background_task(name='helpers.messages.about.message__info__feedback', group='Task')
 def message__info__feedback():
     return message__custom__info(f"""
 If the bot is non-functional or you have feedback you would like to submit.
@@ -29,6 +33,7 @@ Alternatively, if you request is urgent, please contact support@samlewis.dev
     """)
 
 
+@newrelic.agent.background_task(name='helpers.messages.about.message__info__invite_link', group='Task')
 def message__info__invite_link():
     load_dotenv()
     return message__custom__info(f"""

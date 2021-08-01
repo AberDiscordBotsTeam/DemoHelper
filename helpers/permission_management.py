@@ -1,4 +1,5 @@
 
+import newrelic.agent
 from helpers.messages.warnings import message__warning__user_invalid_permissions_demonstrator
 
 demonstrator_roles = [
@@ -9,6 +10,7 @@ demonstrator_roles = [
 ]
 
 
+@newrelic.agent.background_task(name='helpers.permission_management.is_authorised_demonstrator', group='Task')
 async def is_authorised_demonstrator(ctx, new_or_edit, edit_ctx=None):
     for role in ctx.author.roles:
         if str(role).lower() in demonstrator_roles:

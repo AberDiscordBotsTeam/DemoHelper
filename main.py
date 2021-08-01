@@ -1,4 +1,8 @@
-import asyncio
+
+import newrelic.agent
+newrelic.agent.initialize("newrelic.ini", "production")
+app = newrelic.agent.register_application(timeout=10.0)
+
 import os
 
 import logging
@@ -40,6 +44,7 @@ bot_metrics = {}
 current_status_index = 0
 
 
+@newrelic.agent.background_task(name='main.on_ready', group='Task')
 @bot.event
 async def on_ready():
     """
@@ -52,6 +57,7 @@ async def on_ready():
           f'\n------------------------------------------------------------------------------')
 
 
+@newrelic.agent.background_task(name='main.get_bot_metrics', group='Task')
 @tasks.loop(hours=24)
 async def get_bot_metrics():
     await bot.wait_until_ready()
@@ -72,6 +78,7 @@ async def get_bot_metrics():
     bot_metrics["unique_user_count"] = len(temp_member_set)
 
 
+@newrelic.agent.background_task(name='main.status_readout_loop', group='Task')
 @tasks.loop(seconds=10)
 async def status_readout_loop():
     global current_status_index
@@ -96,6 +103,7 @@ async def status_readout_loop():
     current_status_index += 1
 
 
+@newrelic.agent.background_task(name='main.on_command_error', group='Task')
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.errors.CheckFailure):
@@ -116,4 +124,4 @@ if __name__ == '__main__':
     bot.add_cog(DemonstratorTools(bot))
     bot.add_cog(StudentTools(bot))
     bot.add_cog(Utility(bot))
-    bot.run(os.getenv('DISCORD_TOKEN'))
+    bot.run(os.getenv('DISCORD_TOKEN_LIVE_DEV'))

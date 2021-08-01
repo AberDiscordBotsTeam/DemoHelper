@@ -1,8 +1,10 @@
 
+import newrelic.agent
 
 _QUEUE = {'dummy': []}
 
 
+@newrelic.agent.background_task(name='helpers.queue_management.get_queue', group='Task')
 def get_queue(guild_snowflake: str):
     """
     Get the relevant queue for the server

@@ -1,3 +1,5 @@
+
+import newrelic.agent
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
@@ -8,6 +10,7 @@ from helpers.permission_management import is_authorised_demonstrator
 from helpers.queue_management import get_queue
 
 
+@newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.next_student', group='Task')
 async def next_student(ctx, button_ctx):
     queue = get_queue(ctx.guild.id)
 
@@ -42,6 +45,7 @@ async def next_student(ctx, button_ctx):
     )
 
 
+@newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.display_queue', group='Task')
 async def display_queue(ctx, button_ctx):
     queue = get_queue(ctx.guild.id)
 
@@ -61,6 +65,7 @@ async def display_queue(ctx, button_ctx):
         )
 
 
+@newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.clear_queue', group='Task')
 async def clear_queue(ctx, button_ctx):
     (get_queue(ctx.guild.id)).clear()
     await button_ctx.edit_origin(
@@ -69,6 +74,7 @@ async def clear_queue(ctx, button_ctx):
     )
 
 
+@newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.clear_role', group='Task')
 async def clear_role(ctx, button_ctx):
     for role in ctx.guild.roles:
         if role.name == ctx.channel.name:
@@ -81,6 +87,7 @@ async def clear_role(ctx, button_ctx):
     )
 
 
+@newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.purge_channel', group='Task')
 async def purge_channel(ctx, button_ctx):
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
@@ -110,6 +117,7 @@ class DemonstratorTools(commands.Cog):
         name="demonstrator_tools",
         description="A collection of tools for demonstrators."
     )
+    @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools', group='Task')
     async def command__slash__demonstrator_tools(self, ctx: SlashContext):
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 
@@ -142,6 +150,7 @@ class DemonstratorTools(commands.Cog):
         name='next',
         description='Gets next student in the queue'
     )
+    @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext):
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 

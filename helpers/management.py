@@ -1,4 +1,5 @@
 
+import newrelic.agent
 from discord import Member, ChannelType, Permissions
 from discord.ext.commands import Context
 
@@ -6,6 +7,7 @@ from discord.ext.commands import Context
 add_message_file = 'addMessage.shelve'
 
 
+@newrelic.agent.background_task(name='helpers.management.move_user_to_voice_channel', group='Task')
 async def move_user_to_voice_channel(ctx, user: Member):
     if user.voice and user.voice.channel:
         voice_channel = None
@@ -22,6 +24,7 @@ async def move_user_to_voice_channel(ctx, user: Member):
     return False
 
 
+@newrelic.agent.background_task(name='helpers.management.pull_to_voice', group='Task')
 async def pull_to_voice(ctx, user: Member):
     """
     Attempts to pull a user to a voice channel with the same name as the current text channel.
@@ -51,6 +54,7 @@ async def pull_to_voice(ctx, user: Member):
         return False
 
 
+@newrelic.agent.background_task(name='helpers.management.assign_role', group='Task')
 async def assign_role(ctx, member: Member):
     # resolve the role name into a role object
     for guild_role in ctx.guild.roles:
@@ -70,6 +74,7 @@ async def assign_role(ctx, member: Member):
     return False
 
 
+@newrelic.agent.background_task(name='helpers.management.update_member', group='Task')
 def update_member(ctx, member: Member):
     """
     If you have a member object from a previous command that needs updating. This function is for you.

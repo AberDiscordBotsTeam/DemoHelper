@@ -1,4 +1,5 @@
 
+import newrelic.agent
 import discord
 
 # --------------------------------------------------
@@ -14,6 +15,7 @@ EMOTE_INFO = ":information_source:"
 # --------------------------------------------------
 
 
+@newrelic.agent.background_task(name='helpers.messages._core.message__custom__error', group='Task')
 def message__custom__error(message):
     return discord.Embed(
         title=f"{EMOTE_STOP} ERROR",
@@ -24,6 +26,7 @@ def message__custom__error(message):
     )
 
 
+@newrelic.agent.background_task(name='helpers.messages._core.message__custom__stop', group='Task')
 def message__custom__stop(message):
     return discord.Embed(
         title=f"{EMOTE_NO} STOP",
@@ -34,6 +37,7 @@ def message__custom__stop(message):
     )
 
 
+@newrelic.agent.background_task(name='helpers.messages._core.message__custom__warning', group='Task')
 def message__custom__warning(message):
     return discord.Embed(
         title=f"{EMOTE_WARNING} WARNING",
@@ -44,6 +48,7 @@ def message__custom__warning(message):
     )
 
 
+@newrelic.agent.background_task(name='helpers.messages._core.message__custom__info', group='Task')
 def message__custom__info(message):
     return discord.Embed(
         title=f"{EMOTE_INFO} INFORMATION",
