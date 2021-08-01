@@ -8,7 +8,7 @@ from helpers.queue_management import get_queue
 
 
 async def next_student(ctx, button_ctx):
-    queue = get_queue(ctx.guild)
+    queue = get_queue(ctx.guild.id)
 
     if len(queue) == 0:
         await button_ctx.edit_origin(
@@ -42,7 +42,7 @@ async def next_student(ctx, button_ctx):
 
 
 async def display_queue(ctx, button_ctx):
-    queue = get_queue(ctx.guild)
+    queue = get_queue(ctx.guild.id)
 
     if queue is None or len(queue) == 0:
         await button_ctx.edit_origin(
@@ -61,7 +61,7 @@ async def display_queue(ctx, button_ctx):
 
 
 async def clear_queue(ctx, button_ctx):
-    (get_queue(ctx.guild)).clear()
+    (get_queue(ctx.guild.id)).clear()
     await button_ctx.edit_origin(
         content=f'The queue has been cleared.',
         components=[]
