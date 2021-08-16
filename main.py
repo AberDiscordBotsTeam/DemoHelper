@@ -125,4 +125,4 @@ if __name__ == '__main__':
     bot.add_cog(DemonstratorTools(bot))
     bot.add_cog(StudentTools(bot))
     bot.add_cog(Utility(bot))
-    bot.run(os.getenv('DISCORD_TOKEN_LIVE_DEV'))
+    bot.run(os.getenv('DISCORD_TOKEN'))
