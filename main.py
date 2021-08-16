@@ -35,7 +35,7 @@ load_dotenv()
 helpCommand = DefaultHelpCommand()
 
 bot = commands.Bot(
-    command_prefix='dh~',
+    command_prefix='dh:',
     intents=discord.Intents.all()
 )
 slash = SlashCommand(bot, sync_commands=True)
