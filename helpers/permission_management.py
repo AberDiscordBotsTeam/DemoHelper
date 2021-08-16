@@ -11,7 +11,7 @@ demonstrator_roles = [
 
 
 @newrelic.agent.background_task(name='helpers.permission_management.is_authorised_demonstrator', group='Task')
-async def is_authorised_demonstrator(ctx, new_or_edit, edit_ctx=None):
+async def is_authorised_demonstrator(ctx, new_or_edit, edit_ctx=None) -> bool:
     for role in ctx.author.roles:
         if str(role).lower() in demonstrator_roles:
             return True

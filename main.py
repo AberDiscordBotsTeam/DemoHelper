@@ -46,7 +46,7 @@ current_status_index = 0
 
 @newrelic.agent.background_task(name='main.on_ready', group='Task')
 @bot.event
-async def on_ready():
+async def on_ready() -> None:
     """
     Do something when the bot is ready to use.
     """
@@ -59,7 +59,7 @@ async def on_ready():
 
 @newrelic.agent.background_task(name='main.get_bot_metrics', group='Task')
 @tasks.loop(hours=24)
-async def get_bot_metrics():
+async def get_bot_metrics() -> None:
     await bot.wait_until_ready()
     if bot.is_closed(): return
 
@@ -81,7 +81,7 @@ async def get_bot_metrics():
 
 @newrelic.agent.background_task(name='main.status_readout_loop', group='Task')
 @tasks.loop(seconds=10)
-async def status_readout_loop():
+async def status_readout_loop() -> None:
     global current_status_index
 
     await bot.wait_until_ready()
@@ -106,7 +106,7 @@ async def status_readout_loop():
 
 @newrelic.agent.background_task(name='main.on_command_error', group='Task')
 @bot.event
-async def on_command_error(ctx, error):
+async def on_command_error(ctx, error) -> None:
     if isinstance(error, commands.errors.CheckFailure):
         await ctx.send(embed=message__custom__error__check_failure(error))
     elif isinstance(error, commands.errors.MissingRequiredArgument):

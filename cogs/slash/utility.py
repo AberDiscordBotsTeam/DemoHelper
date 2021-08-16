@@ -9,7 +9,7 @@ from helpers.permission_management import is_authorised_demonstrator
 
 
 @newrelic.agent.background_task(name='cogs.slash.utility.check_roles', group='Task')
-async def check_roles(ctx, button_ctx):
+async def check_roles(ctx, button_ctx) -> None:
     if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
     perms = None
     for role in ctx.me.roles:
@@ -42,7 +42,7 @@ async def check_roles(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.utility.clear_messages', group='Task')
-async def clear_messages(ctx, button_ctx):
+async def clear_messages(ctx, button_ctx) -> None:
     if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
@@ -72,7 +72,7 @@ async def clear_messages(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.utility.ping_test', group='Task')
-async def ping_test(ctx, button_ctx):
+async def ping_test(ctx, button_ctx) -> None:
     message_content = f'pong. `DWSP latency: {str(round(ctx.bot.latency * 1000))}ms`'
     await button_ctx.edit_origin(
         content=message_content,
@@ -89,7 +89,7 @@ class Utility(commands.Cog):
         description="A collection of utility actions for Demo Helper"
     )
     @newrelic.agent.background_task(name='cogs.slash.utility.Utility.command__slash__utility', group='Task')
-    async def command__slash__utility(self, ctx: SlashContext):
+    async def command__slash__utility(self, ctx: SlashContext) -> None:
         select = create_select(
             options=[
                 create_select_option('Check Roles', value='Check Roles', emoji='👩'),

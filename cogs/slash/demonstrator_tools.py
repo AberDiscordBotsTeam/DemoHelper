@@ -4,14 +4,13 @@ from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
-
 from helpers.management import pull_to_voice, assign_role, update_member
 from helpers.permission_management import is_authorised_demonstrator
 from helpers.queue_management import get_queue
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.next_student', group='Task')
-async def next_student(ctx, button_ctx):
+async def next_student(ctx, button_ctx) -> None:
     queue = get_queue(ctx.guild.id)
 
     if len(queue) == 0:
@@ -21,20 +20,21 @@ async def next_student(ctx, button_ctx):
         )
         return
 
-    next_student = queue.pop(0)
+    next_student_instance = queue.pop(0)
 
-    if next_student is None:
+    if next_student_instance is None:
         await button_ctx.edit_origin(
             content=f'There are no more students in the queue.',
             components=[]
         )
         return
 
-    next_student = update_member(ctx, next_student)
-    message = f'The next student in the queue is {next_student.mention}, '
-    if await pull_to_voice(ctx, next_student):
+    next_member = update_member(ctx, next_student_instance)
+
+    message = f'The next student in the queue is {next_member.mention}, '
+    if await pull_to_voice(ctx, next_member):
         message = message + 'They have been moved to your help voice channel. '
-    if await assign_role(ctx, next_student):
+    if await assign_role(ctx, next_member):
         message = message + 'They have been assigned the role to view this channel. '
     if message[-2:-1] == ',':
         message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
@@ -46,7 +46,7 @@ async def next_student(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.display_queue', group='Task')
-async def display_queue(ctx, button_ctx):
+async def display_queue(ctx, button_ctx) -> None:
     queue = get_queue(ctx.guild.id)
 
     if queue is None or len(queue) == 0:
@@ -66,7 +66,7 @@ async def display_queue(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.clear_queue', group='Task')
-async def clear_queue(ctx, button_ctx):
+async def clear_queue(ctx, button_ctx) -> None:
     (get_queue(ctx.guild.id)).clear()
     await button_ctx.edit_origin(
         content=f'The queue has been cleared.',
@@ -75,7 +75,7 @@ async def clear_queue(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.clear_role', group='Task')
-async def clear_role(ctx, button_ctx):
+async def clear_role(ctx, button_ctx) -> None:
     for role in ctx.guild.roles:
         if role.name == ctx.channel.name:
             roles = ctx.author.roles
@@ -88,7 +88,7 @@ async def clear_role(ctx, button_ctx):
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.purge_channel', group='Task')
-async def purge_channel(ctx, button_ctx):
+async def purge_channel(ctx, button_ctx) -> None:
     buttons = [
         create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
         create_button(style=ButtonStyle.red, label="no", custom_id="no")
@@ -118,7 +118,7 @@ class DemonstratorTools(commands.Cog):
         description="A collection of tools for demonstrators."
     )
     @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools', group='Task')
-    async def command__slash__demonstrator_tools(self, ctx: SlashContext):
+    async def command__slash__demonstrator_tools(self, ctx: SlashContext) -> None:
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 
         select = create_select(
@@ -151,7 +151,7 @@ class DemonstratorTools(commands.Cog):
         description='Gets next student in the queue'
     )
     @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
-    async def command__slash__demonstrator_tools_next(self, ctx: SlashContext):
+    async def command__slash__demonstrator_tools_next(self, ctx: SlashContext) -> None:
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 
         queue = get_queue(ctx.guild.id)

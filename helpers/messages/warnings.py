@@ -4,7 +4,7 @@ from helpers.messages._core import message__custom__stop
 
 
 @newrelic.agent.background_task(name='helpers.messages.warnings.message__warning__user_invalid_permissions_administrator', group='Task')
-def message__warning__user_invalid_permissions_administrator():
+def message__warning__user_invalid_permissions_administrator() -> message__custom__stop:
     return message__custom__stop(f"""
     This action requires administrative privileges.
     Please contact your server administrator.
@@ -12,7 +12,7 @@ def message__warning__user_invalid_permissions_administrator():
 
 
 @newrelic.agent.background_task(name='helpers.messages.warnings.message__warning__user_invalid_permissions_demonstrator', group='Task')
-def message__warning__user_invalid_permissions_demonstrator():
+def message__warning__user_invalid_permissions_demonstrator() -> message__custom__stop:
     return message__custom__stop(f"""
     This action requires demonstrator privileges.
     Please contact your server administrator.
