@@ -42,36 +42,6 @@ async def check_roles(ctx, button_ctx) -> None:
         )
 
 
-@newrelic.agent.background_task(name='cogs.slash.utility.clear_messages', group='Task')
-async def clear_messages(ctx, button_ctx) -> None:
-    if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
-    buttons = [
-        create_button(style=ButtonStyle.green, label="yes", custom_id="yes"),
-        create_button(style=ButtonStyle.red, label="no", custom_id="no")
-    ]
-    action_row = create_actionrow(*buttons)
-    await button_ctx.edit_origin(content="Please confirm whether you want to clear messages?", components=[action_row])
-
-    button_ctx: ComponentContext = await wait_for_component(ctx.bot, components=[action_row])
-
-    if button_ctx.custom_id == 'yes':
-        await button_ctx.edit_origin(
-            content=f'Message deletion process has begun, '
-                    f'if there are a lot of messages in this channel, '
-                    f'this might take a while.',
-            components=[]
-        )
-
-        await ctx.send(
-            content=f'`{len(await ctx.channel.purge())}` messages have been successfully deleted.', hidden=True
-        )
-    else:
-        await button_ctx.edit_origin(
-            content=f'Aborted.',
-            components=[]
-        )
-
-
 @newrelic.agent.background_task(name='cogs.slash.utility.ping_test', group='Task')
 async def ping_test(ctx, button_ctx) -> None:
     message_content = f'pong. `DWSP latency: {str(round(ctx.bot.latency * 1000))}ms`'
@@ -94,7 +64,6 @@ class Utility(commands.Cog):
         select = create_select(
             options=[
                 create_select_option('Check Roles', value='Check Roles', emoji='👩'),
-                create_select_option('Clear Messages', value='Clear Messages', emoji='✉'),
 
                 create_select_option('Ping', value='Ping', emoji='🏓'),
                 create_select_option('About', value='About', emoji='ℹ'),
@@ -112,8 +81,6 @@ class Utility(commands.Cog):
 
         if button_ctx.values[0] == 'Check Roles':
             await check_roles(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Clear Messages':
-            await clear_messages(ctx, button_ctx)
 
         elif button_ctx.values[0] == 'Ping':
             await ping_test(ctx, button_ctx)

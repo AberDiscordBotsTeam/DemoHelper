@@ -94,13 +94,20 @@ async def purge_channel(ctx, button_ctx) -> None:
         create_button(style=ButtonStyle.red, label="no", custom_id="no")
     ]
     action_row = create_actionrow(*buttons)
-    await ctx.edit_origin(content="Please confirm whether you want to clear messages?", components=[action_row])
+    await button_ctx.edit_origin(content="Please confirm whether you want to clear messages?", components=[action_row])
 
-    if ctx.custom_id == 'yes':
-        counter = await ctx.channel.purge()
+    button_ctx: ComponentContext = await wait_for_component(ctx.bot, components=[action_row])
+
+    if button_ctx.custom_id == 'yes':
         await button_ctx.edit_origin(
-            content=f'`{len(counter)}` messages have been successfully deleted.',
+            content=f'Message deletion process has begun, '
+                    f'if there are a lot of messages in this channel, '
+                    f'this might take a while.',
             components=[]
+        )
+
+        await ctx.send(
+            content=f'`{len(await ctx.channel.purge())}` messages have been successfully deleted.', hidden=True
         )
     else:
         await button_ctx.edit_origin(
