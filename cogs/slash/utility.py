@@ -1,9 +1,9 @@
-
 import newrelic.agent
 from discord.ext import commands
-from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
+from discord_slash import SlashContext, cog_ext, ComponentContext
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
-    wait_for_component, create_button
+    wait_for_component
+
 from helpers.messages.about import message__info__about, message__info__feedback, message__info__invite_link, \
     message__info__help
 from helpers.permission_management import is_authorised_demonstrator

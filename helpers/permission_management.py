@@ -1,5 +1,5 @@
-
 import newrelic.agent
+
 from helpers.messages.warnings import message__warning__user_invalid_permissions_demonstrator
 
 demonstrator_roles = [

@@ -1,7 +1,5 @@
-
 import newrelic.agent
 from discord import Member, ChannelType, Permissions
-
 
 add_message_file = 'addMessage.shelve'
 

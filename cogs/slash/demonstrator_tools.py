@@ -1,9 +1,9 @@
-
 import newrelic.agent
 from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
+
 from helpers.management import pull_to_voice, assign_role, update_member
 from helpers.permission_management import is_authorised_demonstrator
 from helpers.queue_management import get_queue
@@ -124,7 +124,8 @@ class DemonstratorTools(commands.Cog):
         name="demonstrator_tools",
         description="A collection of tools for demonstrators."
     )
-    @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools', group='Task')
+    @newrelic.agent.background_task(
+        name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools', group='Task')
     async def command__slash__demonstrator_tools(self, ctx: SlashContext) -> None:
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 
@@ -147,17 +148,23 @@ class DemonstratorTools(commands.Cog):
 
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
-        if button_ctx.values[0] == 'Next': await next_student(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Display Queue': await display_queue(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Clear Role': await clear_role(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Clear Queue': await clear_queue(ctx, button_ctx)
-        elif button_ctx.values[0] == 'Purge Channel': await purge_channel(ctx, button_ctx)
+        if button_ctx.values[0] == 'Next':
+            await next_student(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Display Queue':
+            await display_queue(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Clear Role':
+            await clear_role(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Clear Queue':
+            await clear_queue(ctx, button_ctx)
+        elif button_ctx.values[0] == 'Purge Channel':
+            await purge_channel(ctx, button_ctx)
 
     @cog_ext.cog_slash(
         name='next',
         description='Gets next student in the queue'
     )
-    @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
+    @newrelic.agent.background_task(
+        name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext) -> None:
         if await is_authorised_demonstrator(ctx, 'NEW') is False: return
 
@@ -170,7 +177,7 @@ class DemonstratorTools(commands.Cog):
         next_student = queue.pop(0)
 
         if next_student is None:
-            await ctx.send(content=f'There are no more students in the queue.',)
+            await ctx.send(content=f'There are no more students in the queue.', )
             return
 
         next_student = update_member(ctx, next_student)

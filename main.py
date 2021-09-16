@@ -1,5 +1,5 @@
-
 import newrelic.agent
+
 newrelic.agent.initialize("newrelic.ini", "production")
 app = newrelic.agent.register_application(timeout=10.0)
 
@@ -10,7 +10,6 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands, tasks
-from discord.ext.commands import DefaultHelpCommand
 from discord_slash import SlashCommand
 from dotenv import load_dotenv
 

@@ -1,5 +1,5 @@
-
 import newrelic.agent
+
 from helpers.messages._core import message__custom__error, message__custom__warning
 
 
@@ -10,7 +10,8 @@ def message__custom__error__check_failure(error) -> message__custom__error:
     """)
 
 
-@newrelic.agent.background_task(name='helpers.messages.errors.message__custom__error__missing_required_argument', group='Task')
+@newrelic.agent.background_task(name='helpers.messages.errors.message__custom__error__missing_required_argument',
+                                group='Task')
 def message__custom__error__missing_required_argument() -> message__custom__error:
     return message__custom__error(f"""
 You are missing a required argument.

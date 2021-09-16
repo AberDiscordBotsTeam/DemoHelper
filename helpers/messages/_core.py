@@ -1,6 +1,5 @@
-
-import newrelic.agent
 import discord
+import newrelic.agent
 
 # --------------------------------------------------
 
@@ -60,6 +59,5 @@ def message__custom__info(message: str) -> discord.Embed:
         """,
         colour=discord.Colour.blue()
     )
-
 
 # --------------------------------------------------
