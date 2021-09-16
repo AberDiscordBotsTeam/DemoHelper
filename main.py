@@ -60,6 +60,13 @@ async def on_ready() -> None:
 @newrelic.agent.background_task(name='main.get_bot_metrics', group='Task')
 @tasks.loop(hours=24)
 async def get_bot_metrics() -> None:
+    """
+    This function is responsible for counting the number of users
+
+    Since this can potentially result in many API calls,
+    to reduce the chance of being rate limited,
+    this function executes once every 24 hours
+    """
     await bot.wait_until_ready()
     if bot.is_closed(): return
 
@@ -82,6 +89,10 @@ async def get_bot_metrics() -> None:
 @newrelic.agent.background_task(name='main.status_readout_loop', group='Task')
 @tasks.loop(seconds=10)
 async def status_readout_loop() -> None:
+    """
+    This is responsible for updating the bot's activity status
+    It cycles through various metrics//statistics on the bot
+    """
     global current_status_index
 
     await bot.wait_until_ready()
