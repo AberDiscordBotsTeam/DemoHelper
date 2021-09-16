@@ -4,6 +4,9 @@ import discord
 
 # --------------------------------------------------
 
+"""
+Defines Discord emotes to use in the messages.
+"""
 EMOTE_WARNING = ":warning:"
 EMOTE_STOP = ":octagonal_sign:"
 EMOTE_NO = ":no_entry:"
