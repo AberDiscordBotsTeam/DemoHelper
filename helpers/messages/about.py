@@ -10,10 +10,11 @@ from helpers.messages._core import message__custom__info
 def message__info__about() -> message__custom__info:
     return message__custom__info(f"""
 __**Demo Helper**__
-DemoHelper is a queue system for online practical where students can add themselves to the
-queue using `!add`.
+DemoHelper is a queue system for online practical where students can add themselves to the queue using the 
+`/student_tools` menu, or simply through using `/add`.
     
-When a demonstrator is free to help, they can call the `!next` command to get the next waiting student.
+When a demonstrator is free to help, they can get the next student using the `/demonstrator_tools` menu,
+or simply through using `/next`.
     
     
 __Source__
