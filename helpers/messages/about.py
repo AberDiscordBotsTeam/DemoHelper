@@ -17,9 +17,16 @@ When a demonstrator is free to help, they can call the `!next` command to get th
     
     
 __Source__
-This is a fork of demoHelperBot by the AberDiscordBotsTeam
+This was a fork of demoHelperBot by the AberDiscordBotsTeam
 Original creator: Nathan Williams and Joel Adams
 https://github.com/AberDiscordBotsTeam/demoHelperBot
+Updates were made by https://github.com/Amheus
+
+
+__Developers__
+Amheus
+Joel
+Nathan
     """)
 
 
