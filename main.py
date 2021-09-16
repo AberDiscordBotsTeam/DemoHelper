@@ -21,6 +21,7 @@ from cogs.slash.utility import Utility
 from helpers.messages.errors import message__custom__error__check_failure, \
     message__custom__error__missing_required_argument, message__custom__error__command_not_found, \
     message__custom__error__bad_argument, message__custom__error__rate_limited, message__custom__error__unknown_error
+from cogs.standard import Standard
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
@@ -31,11 +32,9 @@ logger.addHandler(handler)
 # load the private discord token from .env file.
 load_dotenv()
 
-# Initialise the Bot object with an accessible help Command object
-helpCommand = DefaultHelpCommand()
-
 bot = commands.Bot(
     command_prefix='dh:',
+    help_command=None,
     intents=discord.Intents.all()
 )
 slash = SlashCommand(bot, sync_commands=True)
@@ -136,4 +135,5 @@ if __name__ == '__main__':
     bot.add_cog(DemonstratorTools(bot))
     bot.add_cog(StudentTools(bot))
     bot.add_cog(Utility(bot))
+    bot.add_cog(Standard(bot))
     bot.run(os.getenv('DISCORD_TOKEN'))

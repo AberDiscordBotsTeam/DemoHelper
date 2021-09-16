@@ -30,6 +30,51 @@ Nathan
     """)
 
 
+@newrelic.agent.background_task(name='helpers.messages.about.message__info__about', group='Task')
+def message__info__help() -> message__custom__info:
+    return message__custom__info(f"""
+__**Demo Helper**__
+
+**1. Commands**
+1.1 `/add`
+- This is used by users who want to add themselves to the queue.
+- This function is also available under `/student_tools`.
+
+1.2 `/demonstrator_tools`
+- This is only usable to demonstrators.
+- It holds relevant functions that a demonstrator would require.
+- - `Next`
+- - `Display Queue`
+- - `Clear Queue`
+- - `Clear Role`
+- - `Purge Channel`
+
+1.3 `/next`
+- This is to make the bot easier to use.
+- This function is also available under `/demonstrator_tools`.
+- This is used for the demonstrator to get the next user the in the queue.
+
+1.4 `/remove`
+- This is used by users who want to remove themselves from the queue.
+- This function is also available under `/student_tools`.
+
+1.5 `/student_tools`
+- This holds functions that students would require.
+- - `Add To Queue`
+- - `Remove From Queue`
+- - `My Position In Queue`
+
+1.6 `/utilities`
+- This hold miscellaneous functions as listed below:
+- - `Check Roles`
+- - `Clear Messages`
+- - `Ping`
+- - `About`
+- - `Feedback`
+- - `Invite Link`
+    """)
+
+
 @newrelic.agent.background_task(name='helpers.messages.about.message__info__feedback', group='Task')
 def message__info__feedback() -> message__custom__info:
     return message__custom__info(f"""

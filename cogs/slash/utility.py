@@ -4,7 +4,8 @@ from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_select_option, create_select, create_actionrow, \
     wait_for_component, create_button
-from helpers.messages.about import message__info__about, message__info__feedback, message__info__invite_link
+from helpers.messages.about import message__info__about, message__info__feedback, message__info__invite_link, \
+    message__info__help
 from helpers.permission_management import is_authorised_demonstrator
 
 
@@ -97,6 +98,7 @@ class Utility(commands.Cog):
 
                 create_select_option('Ping', value='Ping', emoji='🏓'),
                 create_select_option('About', value='About', emoji='ℹ'),
+                create_select_option('Help', value='Help', emoji='ℹ️'),
                 create_select_option('Feedback', value='Feedback', emoji='📣'),
                 create_select_option('Invite Link', value='Invite Link', emoji='🌐')
             ],
@@ -117,6 +119,8 @@ class Utility(commands.Cog):
             await ping_test(ctx, button_ctx)
         elif button_ctx.values[0] == 'About':
             await button_ctx.edit_origin(embed=message__info__about(), content='', components=[])
+        elif button_ctx.values[0] == 'Help':
+            await button_ctx.edit_origin(embed=message__info__help(), content='', components=[])
         elif button_ctx.values[0] == 'Feedback':
             await button_ctx.edit_origin(embed=message__info__feedback(), content='', components=[])
         elif button_ctx.values[0] == 'Invite Link':
