@@ -1,8 +1,4 @@
-import newrelic.agent
-
-newrelic.agent.initialize("newrelic.ini", "production")
-app = newrelic.agent.register_application(timeout=10.0)
-
+import configparser
 import os
 
 import logging
@@ -11,25 +7,32 @@ from datetime import datetime
 import discord
 from discord.ext import commands, tasks
 from discord_slash import SlashCommand
-from dotenv import load_dotenv
 
 # logs data to the discord.log file, if this file doesn't exist at runtime it is created automatically
 from cogs.slash.demonstrator_tools import DemonstratorTools
 from cogs.slash.student_tools import StudentTools
 from cogs.slash.utility import Utility
+from helpers.configuration import BOT_CONFIGURATION
 from helpers.messages.errors import message__custom__error__check_failure, \
     message__custom__error__missing_required_argument, message__custom__error__command_not_found, \
     message__custom__error__bad_argument, message__custom__error__rate_limited, message__custom__error__unknown_error
 from cogs.standard import Standard
+
+import newrelic.agent
+
+if BOT_CONFIGURATION.getboolean('NEWRELIC', 'enabled'):
+    newrelic.agent.initialize("newrelic.ini", "production")
+    app = newrelic.agent.register_application(timeout=10.0)
+    print('!!NEWRELIC MONITORING IS ENABLED!!')
+else:
+    print('!!NEWRELIC MONITORING IS DISABLED!!')
+
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(handler)
-
-# load the private discord token from .env file.
-load_dotenv()
 
 bot = commands.Bot(
     command_prefix='dh:',
@@ -135,4 +138,4 @@ if __name__ == '__main__':
     bot.add_cog(StudentTools(bot))
     bot.add_cog(Utility(bot))
     bot.add_cog(Standard(bot))
-    bot.run(os.getenv('DISCORD_TOKEN'))
+    bot.run(BOT_CONFIGURATION.get('DISCORD', 'token'))

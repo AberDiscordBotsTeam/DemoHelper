@@ -10,6 +10,7 @@ python-dotenv = "*"
 PyNaCl = "*"
 "discord.py" = "*"
 asyncio = "*"
+configparser = "*"
 
 [requires]
 python_version = "3.8"

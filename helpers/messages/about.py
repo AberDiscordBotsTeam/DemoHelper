@@ -1,8 +1,6 @@
-import os
-
 import newrelic.agent
-from dotenv import load_dotenv
 
+from helpers.configuration import BOT_CONFIGURATION
 from helpers.messages._core import message__custom__info
 
 
@@ -88,8 +86,7 @@ Alternatively, if you request is urgent, please contact support@samlewis.dev
 
 @newrelic.agent.background_task(name='helpers.messages.about.message__info__invite_link', group='Task')
 def message__info__invite_link() -> message__custom__info:
-    load_dotenv()
     return message__custom__info(f"""
 __DemoHelper Invite Link__:
-{os.getenv('INVITE_URL')}
+{BOT_CONFIGURATION.get('DISCORD', 'invite-link')}
     """)

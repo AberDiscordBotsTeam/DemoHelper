@@ -5,4 +5,4 @@ __pycache__/
 Pipfile.lock
 discord.log
 .vscode
-newrelic.ini
+*.ini
