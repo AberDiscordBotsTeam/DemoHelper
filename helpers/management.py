@@ -8,6 +8,12 @@ add_message_file = 'addMessage.shelve'
 
 @newrelic.agent.background_task(name='helpers.management.move_user_to_voice_channel', group='Task')
 async def move_user_to_voice_channel(ctx, user: Member) -> bool:
+    """
+    This function is responsible for moving the user to a voice channel.
+    :param ctx:
+    :param user:
+    :return: was the movement successful?
+    """
     if user.voice and user.voice.channel:
         voice_channel = None
         for channel in ctx.guild.channels:
@@ -86,4 +92,3 @@ def update_member(ctx, member: Member) -> Member:
         if guild_member.id == member.id:
             return guild_member
     return member
-
