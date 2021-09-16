@@ -16,6 +16,10 @@ async def is_authorised_demonstrator(ctx, new_or_edit, edit_ctx=None) -> bool:
         if str(role).lower() in demonstrator_roles:
             return True
 
+    """
+    This if statement is used so the bot knows whether to send a new message,
+    or modify an existing message
+    """
     if new_or_edit == 'NEW':
         await ctx.send(
             embed=message__warning__user_invalid_permissions_demonstrator(),
