@@ -10,34 +10,16 @@ from helpers.permission_management import is_authorised_demonstrator
 
 
 @newrelic.agent.background_task(name='cogs.slash.utility.check_roles', group='Task')
-async def check_roles(ctx, button_ctx) -> None:
+async def check_roles(ctx: SlashContext, button_ctx: ComponentContext) -> None:
     if await is_authorised_demonstrator(ctx, 'EDIT', button_ctx) is False: return
-    perms = None
-    for role in ctx.me.roles:
-        print(role, ctx.me.name)
-        if role.name[0:4] == 'Demo':  # need better way to do this crap.
-            perms = role.permissions
-            break
-    # doesn't work.. perms = ctx.guild.permissions_for(ctx.me)
-    if perms and not perms.move_members:
+    if ctx.guild.me.guild_permissions.move_members is True:
         await button_ctx.edit_origin(
-            content=f'Bot requires Move Members permission(s)',
+            content=f'Bot has required permissions',
             components=[]
         )
     else:
         await button_ctx.edit_origin(
-            content="""
-            If you are reading this demoBot has all the permissions it needs for: `nextV2`.
-
-            Just double check the help voice and text channels have matching names: 
-            e.g. `help-1` `help-1` and not `help 1` `help-1`.
-
-            Optionally:
-            You can hide the help channels for `@everyone` and `verified`.
-            And create matching `help-1` roles that has the permissions for the user to view/join the corresponding 
-            `help-1` text and voice channels. You can also set the `help-1` role to hide channel history so the 
-            student can't see the message history of the channel.
-            """,
+            content=f'Bot requires Move Members permission(s)',
             components=[]
         )
 
