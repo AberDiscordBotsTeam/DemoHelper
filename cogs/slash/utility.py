@@ -49,7 +49,7 @@ class Utility(commands.Cog):
 
                 create_select_option('Ping', value='Ping', emoji='🏓'),
                 create_select_option('About', value='About', emoji='ℹ'),
-                create_select_option('Help', value='Help', emoji='ℹ️'),
+                create_select_option('Help', value='Help', emoji='ℹ'),
                 create_select_option('Feedback', value='Feedback', emoji='📣'),
                 create_select_option('Invite Link', value='Invite Link', emoji='🌐')
             ],
