@@ -7,39 +7,27 @@ from helpers.queue_management import get_queue
 
 
 @newrelic.agent.background_task(name='cogs.slash.student_tools.add_to_queue', group='Task')
-async def add_to_queue(ctx, button_ctx) -> None:
+async def add_to_queue(ctx) -> str:
     queue = get_queue(ctx.guild)
     user = ctx.author
 
     if user not in queue:
         queue.append(user)
-        await button_ctx.edit_origin(
-            content=f'You have been added to the queue.',
-            components=[]
-        )
+        return f'You have been added to the queue.'
     else:
-        await button_ctx.edit_origin(
-            content=f'You are already in the queue.',
-            components=[]
-        )
+        return f'You are already in the queue.'
 
 
 @newrelic.agent.background_task(name='cogs.slash.student_tools.remove_from_queue', group='Task')
-async def remove_from_queue(ctx, button_ctx) -> None:
+async def remove_from_queue(ctx) -> str:
     queue = get_queue(ctx.guild)
     user = ctx.author
 
     if user in queue:
         queue.remove(user)
-        await button_ctx.edit_origin(
-            content=f'You have been removed from the queue.',
-            components=[]
-        )
+        return f'You have been removed from the queue.'
     else:
-        await button_ctx.edit_origin(
-            content=f'You are not in the queue.',
-            components=[]
-        )
+        return f'You are not in the queue.'
 
 
 @newrelic.agent.background_task(name='cogs.slash.student_tools.my_position_in_queue', group='Task')
@@ -80,9 +68,9 @@ class StudentTools(commands.Cog):
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(*buttons)])
 
         if button_ctx.custom_id == 'Add To Queue':
-            await add_to_queue(ctx, button_ctx)
+            await button_ctx.edit_origin(content=await add_to_queue(ctx), components=[])
         elif button_ctx.custom_id == 'Remove From Queue':
-            await remove_from_queue(ctx, button_ctx)
+            await button_ctx.edit_origin(content=await remove_from_queue(ctx), components=[])
         elif button_ctx.custom_id == 'My Position In Queue':
             await my_position_in_queue(ctx, button_ctx)
 
@@ -93,13 +81,7 @@ class StudentTools(commands.Cog):
     @newrelic.agent.background_task(name='cogs.slash.student_tools.StudentTools.command__slash__student_tools_add',
                                     group='Task')
     async def command__slash__student_tools_add(self, ctx: SlashContext) -> None:
-        queue = get_queue(ctx.guild.id)
-        user = ctx.author
-        queue.append(user)
-        if user not in queue:
-            await ctx.send(content=f'You have been added to the queue.')
-        else:
-            await ctx.send(content=f'You are already in the queue.')
+        await ctx.send(content=await add_to_queue(ctx))
 
     @cog_ext.cog_slash(
         name='remove',
@@ -108,10 +90,4 @@ class StudentTools(commands.Cog):
     @newrelic.agent.background_task(name='cogs.slash.student_tools.StudentTools.command__slash__student_tools_remove',
                                     group='Task')
     async def command__slash__student_tools_remove(self, ctx: SlashContext) -> None:
-        queue = get_queue(ctx.guild.id)
-        user = ctx.author
-        queue.remove(user)
-        if user not in queue:
-            await ctx.send(content=f'You have been removed from the queue.')
-        else:
-            await ctx.send(content=f'You are not in the queue.')
+        await ctx.send(content=await remove_from_queue(ctx))
