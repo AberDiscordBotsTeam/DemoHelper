@@ -3,19 +3,18 @@ from discord.ext import commands
 from discord_slash import SlashContext, cog_ext, ComponentContext, ButtonStyle
 from discord_slash.utils.manage_components import create_actionrow, wait_for_component, create_button
 
-from helpers.queue_management import get_queue
+from helpers.queue_management import get_queue, _QUEUE
 
 
 @newrelic.agent.background_task(name='cogs.slash.student_tools.add_to_queue', group='Task')
 async def add_to_queue(ctx) -> str:
-    queue = get_queue(ctx.guild)
-    user = ctx.author
+    queue = get_queue(ctx.guild.id)
 
     if ctx.author.voice is None:
         return f'You are not in a voice channel.'
 
-    if user not in queue:
-        queue.append(user)
+    if ctx.author not in queue:
+        _QUEUE[ctx.guild.id].append(ctx.author)
         return f'You have been added to the queue.'
     else:
         return f'You are already in the queue.'
@@ -23,7 +22,7 @@ async def add_to_queue(ctx) -> str:
 
 @newrelic.agent.background_task(name='cogs.slash.student_tools.remove_from_queue', group='Task')
 async def remove_from_queue(ctx) -> str:
-    queue = get_queue(ctx.guild)
+    queue = get_queue(ctx.guild.id)
     user = ctx.author
 
     if user in queue:
