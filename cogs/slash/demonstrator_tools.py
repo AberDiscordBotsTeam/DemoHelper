@@ -46,7 +46,7 @@ async def display_queue(ctx, button_ctx) -> None:
     else:
         temp = ''
         for list_item in queue:
-            temp += f'° {str(list_item.name)}'
+            temp += f'° {str(list_item.name)}\n'
 
         await button_ctx.edit_origin(
             content=f'`{len(queue)}` students in the queue:\n{temp}',
