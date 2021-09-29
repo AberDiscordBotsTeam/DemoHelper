@@ -10,24 +10,16 @@ from helpers.queue_management import get_queue
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.next_student', group='Task')
-async def next_student(ctx, button_ctx) -> None:
+async def next_student(ctx) -> str:
     queue = get_queue(ctx.guild.id)
 
     if len(queue) == 0:
-        await button_ctx.edit_origin(
-            content=f'The queue is empty.',
-            components=[]
-        )
-        return
+        return f'The queue is empty.'
 
     next_student_instance = queue.pop(0)
 
     if next_student_instance is None:
-        await button_ctx.edit_origin(
-            content=f'There are no more students in the queue.',
-            components=[]
-        )
-        return
+        return f'There are no more students in the queue.'
 
     next_member = update_member(ctx, next_student_instance)
 
@@ -39,10 +31,7 @@ async def next_student(ctx, button_ctx) -> None:
     if message[-2:-1] == ',':
         message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
 
-    await button_ctx.edit_origin(
-        content=message,
-        components=[]
-    )
+    return message
 
 
 @newrelic.agent.background_task(name='cogs.slash.demonstrator_tools.display_queue', group='Task')
@@ -149,7 +138,7 @@ class DemonstratorTools(commands.Cog):
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
         if button_ctx.values[0] == 'Next':
-            await next_student(ctx, button_ctx)
+            await button_ctx.edit_origin(content=await next_student(ctx), components=[])
         elif button_ctx.values[0] == 'Display Queue':
             await display_queue(ctx, button_ctx)
         elif button_ctx.values[0] == 'Clear Role':
@@ -166,27 +155,4 @@ class DemonstratorTools(commands.Cog):
     @newrelic.agent.background_task(
         name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext) -> None:
-        if await is_authorised_demonstrator(ctx, 'NEW') is False: return
-
-        queue = get_queue(ctx.guild.id)
-
-        if len(queue) == 0:
-            await ctx.send(content=f'The queue is empty.')
-            return
-
-        next_student = queue.pop(0)
-
-        if next_student is None:
-            await ctx.send(content=f'There are no more students in the queue.', )
-            return
-
-        next_student = update_member(ctx, next_student)
-        message = f'The next student in the queue is {next_student.mention}, '
-        if await pull_to_voice(ctx, next_student):
-            message = message + 'They have been moved to your help voice channel. '
-        if await assign_role(ctx, next_student):
-            message = message + 'They have been assigned the role to view this channel. '
-        if message[-2:-1] == ',':
-            message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
-
-        await ctx.send(content=message)
+        await ctx.send(content=await next_student(ctx))
