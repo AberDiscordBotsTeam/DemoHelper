@@ -37,8 +37,7 @@ async def pull_to_voice(ctx, user: Member) -> bool:
     :returns: true or false based on whether the move was a success.
     """
 
-    # check user is in a voice channel
-    if user.voice and user.voice.channel:
+    if user.voice:
         # find the relevant voice channel based on the text channel name
         voice_channel = None
         for channel in ctx.guild.channels:

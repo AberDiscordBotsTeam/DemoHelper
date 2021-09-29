@@ -11,6 +11,9 @@ async def add_to_queue(ctx) -> str:
     queue = get_queue(ctx.guild)
     user = ctx.author
 
+    if ctx.author.voice is None:
+        return f'You are not in a voice channel.'
+
     if user not in queue:
         queue.append(user)
         return f'You have been added to the queue.'
