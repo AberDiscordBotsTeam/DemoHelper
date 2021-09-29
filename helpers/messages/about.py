@@ -19,13 +19,17 @@ __Source__
 This was a fork of demoHelperBot by the AberDiscordBotsTeam
 Original creator: Nathan Williams and Joel Adams
 https://github.com/AberDiscordBotsTeam/demoHelperBot
-Updates were made by https://github.com/Amheus
+Updates were made by Cerys (https://github.com/Amheus)
 
 
 __Developers__
-Amheus
-Joel
-Nathan
+Cerys Lewis
+Joel Adams
+Nathan Williams
+
+
+__Testers__
+Rose Brindle
     """)
 
 
@@ -80,7 +84,7 @@ def message__info__feedback() -> message__custom__info:
 If the bot is non-functional or you have feedback you would like to submit.
 Then please join https://discord.gg/b3EdxVK and send a message in the <#740966780079571105> or <#740967688876327012> channels'
 
-Alternatively, if you request is urgent, please contact support@samlewis.dev
+Alternatively, you can raise a ticket at https://support.scorpia.network
     """)
 
 
