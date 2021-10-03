@@ -23,7 +23,6 @@ import newrelic.agent
 if BOT_CONFIGURATION.getboolean('NEWRELIC', 'enabled'):
     newrelic.agent.initialize("newrelic.ini", "production")
     app = newrelic.agent.register_application(timeout=10.0)
-    print('!!NEWRELIC MONITORING IS ENABLED!!')
 else:
     print('!!NEWRELIC MONITORING IS DISABLED!!')
 
