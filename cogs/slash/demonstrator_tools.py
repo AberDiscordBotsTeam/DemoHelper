@@ -138,7 +138,7 @@ class DemonstratorTools(commands.Cog):
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
         if button_ctx.values[0] == 'Next':
-            await button_ctx.edit_origin(content=await next_student(ctx), components=[])
+            await button_ctx.edit_origin(content=await next_student(ctx), components=[], hidden=False)
         elif button_ctx.values[0] == 'Display Queue':
             await display_queue(ctx, button_ctx)
         elif button_ctx.values[0] == 'Clear Role':
