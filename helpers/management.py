@@ -28,7 +28,7 @@ async def move_user_to_voice_channel(ctx, user: Member) -> bool:
 
 
 @newrelic.agent.background_task(name='helpers.management.pull_to_voice', group='Task')
-async def pull_to_voice(ctx, user: Member) -> bool:
+async def pull_to_voice(ctx, user: Member) -> (bool, str):
     """
     Attempts to pull a user to a voice channel with the same name as the current text channel.
 
@@ -47,13 +47,11 @@ async def pull_to_voice(ctx, user: Member) -> bool:
         # move the user to the help channel
         if voice_channel:
             await user.move_to(voice_channel)
-            return True
+            return True, ''
         else:
-            print("no channel")
-            return False
+            return False, 'channel does not exist'
     else:
-        print("user not in voice")
-        return False
+        return False, 'user not in voice channel'
 
 
 @newrelic.agent.background_task(name='helpers.management.assign_role', group='Task')

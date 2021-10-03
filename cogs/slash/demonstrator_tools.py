@@ -16,7 +16,7 @@ async def next_student(ctx) -> str:
     if len(queue) == 0:
         return f'The queue is empty.'
 
-    next_student_instance = queue.pop(0)
+    next_student_instance = queue[0]
 
     if next_student_instance is None:
         return f'There are no more students in the queue.'
@@ -24,13 +24,20 @@ async def next_student(ctx) -> str:
     next_member = update_member(ctx, next_student_instance)
 
     message = f'The next student in the queue is {next_member.mention}, '
-    if await pull_to_voice(ctx, next_member):
+
+    user_moved = await pull_to_voice(ctx, next_member)
+    if user_moved[0] is True:
         message = message + 'They have been moved to your help voice channel. '
+    else:
+        return user_moved[1]
+
     if await assign_role(ctx, next_member):
         message = message + 'They have been assigned the role to view this channel. '
+
     if message[-2:-1] == ',':
         message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
 
+    queue.pop(0)
     return message
 
 

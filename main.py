@@ -1,10 +1,8 @@
-import configparser
-import os
-
 import logging
 from datetime import datetime
 
 import discord
+import newrelic.agent
 from discord.ext import commands, tasks
 from discord_slash import SlashCommand
 
@@ -12,20 +10,17 @@ from discord_slash import SlashCommand
 from cogs.slash.demonstrator_tools import DemonstratorTools
 from cogs.slash.student_tools import StudentTools
 from cogs.slash.utility import Utility
+from cogs.standard import Standard
 from helpers.configuration import BOT_CONFIGURATION
 from helpers.messages.errors import message__custom__error__check_failure, \
     message__custom__error__missing_required_argument, message__custom__error__command_not_found, \
     message__custom__error__bad_argument, message__custom__error__rate_limited, message__custom__error__unknown_error
-from cogs.standard import Standard
-
-import newrelic.agent
 
 if BOT_CONFIGURATION.getboolean('NEWRELIC', 'enabled'):
     newrelic.agent.initialize("newrelic.ini", "production")
     app = newrelic.agent.register_application(timeout=10.0)
 else:
     print('!!NEWRELIC MONITORING IS DISABLED!!')
-
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.INFO)  # logging levels: NOTSET (all), DEBUG (bot interactions), INFO (bot connected etc)
