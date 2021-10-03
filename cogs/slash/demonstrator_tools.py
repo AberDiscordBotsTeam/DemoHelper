@@ -163,4 +163,5 @@ class DemonstratorTools(commands.Cog):
     @newrelic.agent.background_task(
         name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext) -> None:
+        if await is_authorised_demonstrator(ctx, 'NEW') is False: return
         await ctx.send(content=await next_student(ctx), hidden=True)
