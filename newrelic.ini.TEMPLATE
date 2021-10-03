@@ -1,0 +1,34 @@
+[newrelic]
+license_key = <<LICENSE KEY HERE>>
+app_name = Demo Helper
+distributed_tracing.enabled = true
+monitor_mode = true
+log_level = info
+ssl = true
+high_security = false
+transaction_tracer.enabled = true
+transaction_tracer.transaction_threshold = apdex_f
+transaction_tracer.record_sql = obfuscated
+transaction_tracer.stack_trace_threshold = 0.5
+transaction_tracer.explain_enabled = true
+transaction_tracer.explain_threshold = 0.5
+error_collector.enabled = true
+browser_monitoring.auto_instrument = true
+thread_profiler.enabled = true
+
+# ---------------------------------------------------------------------------
+
+[newrelic:development]
+monitor_mode = false
+
+[newrelic:test]
+monitor_mode = false
+
+[newrelic:staging]
+app_name = Demo Helper (Staging)
+monitor_mode = true
+
+[newrelic:production]
+monitor_mode = true
+
+# ---------------------------------------------------------------------------
