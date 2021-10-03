@@ -38,6 +38,7 @@ async def next_student(ctx) -> str:
         message = message + f'{ctx.author.mention} can now help you in {ctx.channel.mention}.'
 
     queue.pop(0)
+    await ctx.channel.send(f'{next_member.mention}, {ctx.author.mention} can now help you in {ctx.channel.mention}')
     return message
 
 
@@ -145,7 +146,7 @@ class DemonstratorTools(commands.Cog):
         button_ctx: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)])
 
         if button_ctx.values[0] == 'Next':
-            await button_ctx.edit_origin(content=await next_student(ctx), components=[], hidden=False)
+            await button_ctx.edit_origin(content=await next_student(ctx), components=[])
         elif button_ctx.values[0] == 'Display Queue':
             await display_queue(ctx, button_ctx)
         elif button_ctx.values[0] == 'Clear Role':
@@ -162,4 +163,4 @@ class DemonstratorTools(commands.Cog):
     @newrelic.agent.background_task(
         name='cogs.slash.demonstrator_tools.DemonstratorTools.command__slash__demonstrator_tools_next', group='Task')
     async def command__slash__demonstrator_tools_next(self, ctx: SlashContext) -> None:
-        await ctx.send(content=await next_student(ctx))
+        await ctx.send(content=await next_student(ctx), hidden=True)
