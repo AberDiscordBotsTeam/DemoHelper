@@ -1,4 +1,4 @@
-<h1>DemoHelper v2</h1>
+<h1>DemoHelper v3</h1>
 
 [![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/PzqhkafaUV)
 
