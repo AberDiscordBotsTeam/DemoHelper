@@ -6,11 +6,14 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-python-dotenv = "*"
-PyNaCl = "*"
-"discord.py" = "*"
+
 asyncio = "*"
 configparser = "*"
+"discord.py" = "*"
+discord-py-slash-command = "*"
+newrelic = "*"
+PyNaCl = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
