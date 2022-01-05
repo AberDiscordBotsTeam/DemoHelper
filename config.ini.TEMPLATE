@@ -1,0 +1,6 @@
+[DISCORD]
+token=<<DISCORD TOKEN HERE>>
+invite-url=<<INVITE URL HERE>>
+
+[NEWRELIC]
+enabled=yes

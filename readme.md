@@ -1,28 +1,52 @@
-# DemoHelper bot
-[![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/PzqhkafaUV)  
-stores a queue of people waiting for demonstrators to help them with their work or sign-off
+<h1>DemoHelper v2</h1>
 
-**Please note:**  The user requires one of the following roles with the same name to have full access to all 
-the bots commands: Demonstrator, demonstrator, DEMONSTRATOR, Admin role, ADMIN ROLE, Admin, Devs
+[![Discord](https://img.shields.io/discord/740966777957253140.svg)](https://discord.gg/PzqhkafaUV)
 
-**Aber Verify Bot integration** Once you've added the `Aber Verify Bot` and configured the server channels you will need to manually assign `DemoHelper` the role of verified from the `#verify-newcomers` channel to allow it to see any other channels 
+<span>
+  <img src="assets/logo_circle.png" alt="logo" height="100"/>
+  <img src="assets/logo_dev_circle.png" alt="dev logo" height="100"/>
+</span>
 
-## Install and use locally
-1. Check python3, pip and pipenv are installed
-2. Navigate to a terminal and `git clone  <repository url>` and cd into its directory
-3. `pipenv install` to install dependencies
-4. Navigate to the discord developers site, create a new application, go to the bot tab, add a bot and then copy the token from that tab
-5. create a .env file with the token from the previous step using the format `DISCORD_TOKEN=<yourtoken-here>`.
-**Optional** add the line `CMD_PREFIX=<custom-prefix>` to change from the default prefix of `!`
-6. `pipenv run python3 -m demobot` to run the server
-7. Navigate to the 0Auth2 tab and select bot from the scopes section, then scroll down and select the bot permissions: View channels and Send Messages. Copy the link from the scopes section and paste it into your web browser and select the servers you want to add the bot to
-  
-## Setting up as a service
-1. Complete the steps from above apart from 6 and 7
-2. create a file in `/etc/systemd/system/` called `demoBot.service` and add the following to the file:
+
+# 1.0 About
+DemoHelper stores a queue of students waiting for demonstrators in their work.
+<img src="assets/img1.png"/>
+
+# 1.1 Reference Guide
+The Discord Bot Reference Guide has a section on DemoHelper.
+At the time of this writing, it's under section 6.\
+The reference guide can be found here: https://docs.scorpia.network/pdfs/discordbotreferenceguide.pdf
+
+# 1.2 Installation Instructions
+1. Ensure that the following are installed:
+    - python3
+    - pip
+    - pipenv
+    - git
+2. Open the terminal and run the following
+    ```bash
+    cd ~
+    git clone https://github.com/AberDiscordBotsTeam/demoHelperBot
+    cd demoHelperBot
+    pipenv install
+    ```
+3. Go to the Discord Developer Portal (https://discord.com/developers/applications),
+   create a new application, go to the bot tab, add a bot and then copy the token from that tab
+4. Rename `config.ini.TEMPLATE` to `config.ini` and populate the `DISCORD.token` and `DISCORD.invite-url` variables
+5. Use `pipenv run python3 -m demobot` to run the server
+7. Navigate to the 0Auth2 tab and select bot from the scopes section, 
+   scroll down and select the bot permissions: View channels and Send Messages.
+   Copy the link from the scopes section and paste it into your web browser and select the servers you want to add the bot to
+   
+# 1.3 Configuring a Systemd Service
+Run the following
+```bash
+sudo nano /etc/systemd/system/DemoHelper.service
+```
+Then copy and paste the following into that file.
 ```
 [Unit]
-Description=demoBot
+Description=DemoHelper
 After=network.target
 StartLimitIntervalSec=0
 
@@ -37,20 +61,21 @@ ExecStart=/usr/bin/pipenv run python3 -m demobot
 [Install]
 WantedBy=multi-user.target
 ```
-3. Once completed use the command `sudo systemctl daemon-reload` to reload the file
+Then run the following
+```bash
+sudo systemctl daemon-reload
+```
 
-## The following commands are now used to manage the bot:
-1. `sudo systemctl start demoBot` - start the service
-2. `sudo systemctl status demoBot` - get the status of the service
-3. `sudo systemctl stop demoBot` - stop the service
-4. `systemctl restart demoBot` - restart the service
-5. `sudo systemctl enable demoBot/sudo systemctl disable demoBot` - enable/disable the service on boot of server.
-6. `journalctl -ru demobot.service` - view recent logs
+## 1.3.1 Systemd Commands
+- `sudo systemctl start DemoHelper` - start the service
+- `sudo systemctl status DemoHelper` - get the status of the service
+- `sudo systemctl stop DemoHelper` - stop the service
+- `sudo systemctl restart DemoHelper` - restart the service
+- `sudo systemctl enable DemoHelper`//`sudo systemctl disable DemoHelper` - enable//disable the service on boot of server.
+- `journalctl -ru DemoHelper.service` - view recent logs
 
-## General maintenance
-1. `pipenv update` to update dependencies
-2. `git pull` to pull updates from the repository
-3. `systemctl restart demoBot` to restart the service
-
-## Preview of bot working
-![help](https://raw.githubusercontent.com/IdrisTheDragon/demoHelperBot/master/help_2.png)
+   
+# 1.4 General Maintenance
+- `pipenv update` to update dependencies
+- `git pull` to pull updates from the repository
+- `systemctl restart demoBot` to restart the service
