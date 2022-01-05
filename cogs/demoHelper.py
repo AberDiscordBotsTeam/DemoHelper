@@ -294,10 +294,10 @@ class Students(commands.Cog):
         if s not in q:
             q.append(s)
             logging.info('{0}: #{1} added student to queue {2}'.format(ctx.guild, ctx.channel.name, s))
-            prevMessages[k] = await ctx.send('{0}, you have been added to the queue at position `{1}`. {2}'.format(s.mention, (q.index(s) + 1), getCustomAddMessage(ctx.guild)))
+            prevMessages[k] = await ctx.send('{0}, you have been added to the queue at position `{1}`. {2}'.format(s.mention, q.index(s), getCustomAddMessage(ctx.guild)))
         else:
             logging.info('{0}: #{1} added student to queue (already in queue) {2}'.format(ctx.guild, ctx.channel.name, s))
-            prevMessages[k] = await ctx.send('{0}, you are already in the queue at position `{1}`.'.format(s.mention, (q.index(s) + 1)))
+            prevMessages[k] = await ctx.send('{0}, you are already in the queue at position `{1}`.'.format(s.mention, q.index(s)))
         await rmCMDMessage(ctx)
 
     @commands.command(aliases=['r'])
@@ -331,7 +331,7 @@ class Students(commands.Cog):
         q = getQueue(ctx.guild)
         if s in q:
             logging.info('{0}: #{1} student print {2}'.format(ctx.guild, ctx.channel.name, s))
-            await ctx.send('{0}, you are in position `{1}` in the queue'.format(s.mention, (q.index(s) + 1)))
+            await ctx.send('{0}, you are in position `{1}` in the queue'.format(s.mention, q.index(s)))
         else:
             logging.info('{0}: #{1} student print (not in queue) {2}'.format(ctx.guild, ctx.channel.name, s))
             await ctx.send('{0}, you are not in the queue. Please add yourself using {1}add'.format(s.mention, prefix))
